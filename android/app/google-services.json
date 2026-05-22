@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "533777709323",
+    "project_id": "ithring-vest",
+    "storage_bucket": "ithring-vest.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533777709323:android:7c8f67552ed70a65154a0e",
+        "android_client_info": {
+          "package_name": "dev.tiagobruckmann.ithring_vest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuYManbyokbAAE8wET2AjKHcBizGLbCR0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533777709323:android:9a89381a7f7037c9154a0e",
+        "android_client_info": {
+          "package_name": "dev.tiagobruckmann.ithring_vest_liquibase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuYManbyokbAAE8wET2AjKHcBizGLbCR0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
