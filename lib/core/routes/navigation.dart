@@ -1,3 +1,6 @@
+import 'package:go_router/go_router.dart';
+import 'package:ithring_vest/session.dart';
+
 class Navigation {
 
   bool canPop() => Session.globalContext.currentContext!.canPop();
@@ -18,7 +21,8 @@ class Navigation {
 
   void backAll() {
     if ( !canPop() ) {
-      return go(AuthPath.loginPath.login);
+      // return go(AuthPath.loginPath.login);
+      return;
     }
 
     while ( canPop() ) {

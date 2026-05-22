@@ -1,10 +1,8 @@
 import 'dart:math';
-
-import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:ithring_vest/session.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SharedServices {
+class SharedUtils {
 
   final String _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   final Random _rnd = Random();
@@ -13,11 +11,23 @@ class SharedServices {
     return String.fromCharCodes(
       Iterable.generate(
         length,
-            (_) => _chars.codeUnitAt(
+          (_) => _chars.codeUnitAt(
           _rnd.nextInt(_chars.length),
         ),
       ),
     );
+  }
+
+  String parseNumberLessThan10( int value ) {
+    if ( value < 10 ) {
+      return "0$value";
+    }
+
+    return value.toString();
+  }
+
+  String removeAllCharacters( String value ) {
+    return value.replaceAll(RegExp(r'[^a-zA-Z0-9]'), "");
   }
 
   Future<void> openAppStore() async {

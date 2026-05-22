@@ -16,7 +16,7 @@ abstract class _ConnectionMobx with Store {
   ConnectivityResult connectionStatus = ConnectivityResult.none;
 
   @observable
-  final Connectivity _connectivity = Connectivity();
+  Connectivity _connectivity = Connectivity();
 
   @observable
   bool isValidConnection = true;

@@ -23,7 +23,7 @@ class Crash {
     }
   }
 
-  void log( PlatformException exception) {
+  void log( PlatformException exception ) {
     if ( _crashlytics.isCrashlyticsCollectionEnabled ) {
       final map = {
         "code": exception.code,

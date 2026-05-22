@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ithring_vest/design_system/style/app_images.dart';
+import 'package:ithring_vest/design_system/widgets/verify_connection_widget.dart';
+import 'package:ithring_vest/session.dart';
 
 class RouterRegister {
 
-  /*
   static final GoRouter router = GoRouter(
     navigatorKey: Session.globalContext,
-    initialLocation: AuthPath.splashPath.splash,
+    // initialLocation: AuthPath.splashPath.splash,
     errorBuilder: ( context, state ) => _errorRoute( context ),
     routes: [
-      ...AuthRoute.getInstance().routes,
-      ...DashRoute.getInstance().routes,
-      ...SettingsRoute.getInstance().routes,
-      ...NewSaleRoute.getInstance().routes,
+      // ...AuthRoute.getInstance().routes,
+      // ...DashRoute.getInstance().routes,
+      // ...SettingsRoute.getInstance().routes,
+      // ...NewSaleRoute.getInstance().routes,
     ],
   );
 
@@ -31,7 +33,7 @@ class RouterRegister {
           children: [
 
             SvgPicture.asset(
-              AppImages.pageNotFound,
+              AppImages.logo,
               height: 180,
             ),
 
@@ -50,7 +52,8 @@ class RouterRegister {
                 child: Text(
                   FlutterI18n.translate(context, "routes.back_home"),
                 ),
-                onPressed: () => Session.navigation.go(DashPath.dashboardPath.dash),
+                // onPressed: () => Session.navigation.go(DashPath.dashboardPath.dash),
+                onPressed: () { },
               ),
             ),
 
@@ -59,6 +62,5 @@ class RouterRegister {
       ),
     );
   }
-   */
 
 }

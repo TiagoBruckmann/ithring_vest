@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:ithring_vest/core/domain/sources/local/mobx/connection/connection_mox.dart';
+import 'package:ithring_vest/core/domain/source/local/injection/injection.dart';
+import 'package:ithring_vest/core/domain/source/local/mobx/connection/connection_mobx.dart';
 import 'package:ithring_vest/design_system/widgets/loading_overlay_widget.dart';
 import 'package:ithring_vest/design_system/widgets/no_ethernet_widget.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ithring_vest/session.dart';
 
 class VerifyConnectionWidget extends StatelessWidget {
