@@ -1,6 +1,6 @@
 # ithring_vest
 
-deixar de ter dor com o dinheiro para alcançar a liberdade financeira.
+Deixa de ter dor com o dinheiro para alcançar a liberdade financeira.
 
 ## Origem do nome
 
