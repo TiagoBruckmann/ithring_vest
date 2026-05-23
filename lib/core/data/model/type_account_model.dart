@@ -8,7 +8,7 @@ class TypeAccountModel extends TypeAccountEntity with EquatableMixin {
     return TypeAccountModel(
       id: json["id"],
       name: json["name"],
-      rate: json["rate"]
+      rate: json["rate"],
     );
   }
 

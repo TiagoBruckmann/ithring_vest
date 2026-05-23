@@ -15,6 +15,10 @@ import 'package:ithring_vest/core/domain/source/local/mobx/connection/connection
     as _i311;
 import 'package:ithring_vest/core/domain/source/local/mobx/user/user_mobx.dart'
     as _i477;
+import 'package:ithring_vest/modules/auth/app/login/cubit/login_cubit.dart'
+    as _i1023;
+import 'package:ithring_vest/modules/auth/app/splash/cubit/splash_cubit.dart'
+    as _i814;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -23,6 +27,8 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    gh.factory<_i1023.LoginCubit>(() => _i1023.LoginCubit());
+    gh.factory<_i814.SplashCubit>(() => _i814.SplashCubit());
     gh.singleton<_i311.ConnectionMobx>(() => _i311.ConnectionMobx());
     gh.lazySingleton<_i477.UserMobx>(() => _i477.UserMobx());
     return this;

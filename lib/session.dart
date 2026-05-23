@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ithring_vest/core/domain/entities/user_entity.dart';
+import 'package:ithring_vest/core/domain/source/local/local_storage.dart';
 import 'package:ithring_vest/core/domain/source/remote/crash.dart';
 import 'package:ithring_vest/core/domain/source/remote/performance.dart';
 import 'package:ithring_vest/core/domain/source/local/app_logs.dart';
@@ -19,6 +20,7 @@ class Session {
   static final FieldsFormatter fieldsFormatter = FieldsFormatter();
   static final CoinFormatter coinFormatter = CoinFormatter();
   static final NotificationServices notifications = NotificationServices();
+  static final LocalStorage localStorage = LocalStorage();
   static final Performance performance = Performance();
   static final Navigation navigation = Navigation();
   static final SharedUtils utils = SharedUtils();

@@ -1,1 +1,62 @@
-{}
+{
+  "pages": {
+    "splash": {
+      "title1": "Controle Patrimônio. ",
+      "title2": "Conquiste liberdade"
+    },
+    "login": {
+      "presentation": {
+        "title1": "Sua vida financeira em ",
+        "title2": "um só lugar.",
+        "subtitle": "Controle suas contas, cartões, investimentos e alcance seus objetivos com inteligência.",
+        "options": {
+          "patrimony": "Patrimônio consolidado",
+          "cards": "Cartões e limites",
+          "invest": "Investimentos",
+          "multi_currency": "Multimoedas"
+        },
+        "account": "Contas",
+        "card": "Cartões",
+        "create_account": "Criar minha conta",
+        "have_account": "Entrar na minha conta"
+      },
+      "login": {
+        "welcome": "Bem-vindo de volta!",
+        "subtitle": "Faça login para continuar\ncuidando do seu dinheiro.",
+        "remember_me": "Lembrar de mim",
+        "forgot_password": "Esqueci minha senha",
+        "enter_button": "Entrar",
+        "continue_with": "ou continue com",
+        "google": "Continuar com Google",
+        "no_account": "Ainda não tem uma conta? ",
+        "create_account": "Criar conta"
+      }
+    }
+  },
+  "modal": {
+    "exit_app": {
+      "title": "Deseja sair do app?",
+      "subtitle": "Você realmente deseja sair do app?"
+    }
+  },
+  "routes": {
+    "app_bar": "Tela não encontrada",
+    "subtitle": "A tela que você tentou acessar não existe ou não está disponível no momento.",
+    "back_home": "Voltar para a Home"
+  },
+  "toast": {
+    "error": {
+      "invalid_fields_red_validations": "Campos inválidos, verifique as validações em vermelho e tente novamente."
+    }
+  },
+  "fields": {
+    "email": {
+      "label": "E-mail",
+      "hint": "murtagh@gmail.com"
+    },
+    "password": {
+      "label": "Senha",
+      "hint": "Digite sua senha"
+    }
+  }
+}

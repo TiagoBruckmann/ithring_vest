@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ithring_vest/design_system/style/theme/app_colors_dark.dart';
 import 'package:ithring_vest/design_system/style/theme/app_colors_light.dart';
 
@@ -14,70 +15,71 @@ class Themes {
     surface: AppColorsDark.cardsBackground,
     error: AppColorsDark.error,
     onPrimary: AppColorsDark.primaryText,
-    onSecondary: AppColorsDark.primaryText,
-    onSurface: AppColorsDark.primaryText,
-    onError: AppColorsDark.primaryText,
+    onSecondary: AppColorsDark.hoverGreen,
+    onSurface: AppColorsDark.secondaryText,
+    tertiary: AppColorsDark.tertiaryText,
+    // onError: AppColorsDark.primaryText,
     brightness: Brightness.dark,
   );
 
-  static final _textThemeDark = const TextTheme(
-    headlineLarge: TextStyle(
+  static final _textThemeDark = TextTheme(
+    headlineLarge: GoogleFonts.playfairDisplay(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.bold,
       fontSize: 32,
       height: 1.1,
     ),
-    headlineMedium: TextStyle(
+    headlineMedium: GoogleFonts.playfairDisplay(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.bold,
       fontSize: 26,
     ),
-    headlineSmall: TextStyle(
+    headlineSmall: GoogleFonts.playfairDisplay(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w700,
       fontSize: 22,
     ),
-    titleLarge: TextStyle(
+    titleLarge: GoogleFonts.playfairDisplay(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w700,
       fontSize: 18,
     ),
-    titleMedium: TextStyle(
+    titleMedium: GoogleFonts.playfairDisplay(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w600,
       fontSize: 16,
     ),
-    titleSmall: TextStyle(
+    titleSmall: GoogleFonts.playfairDisplay(
       color: AppColorsDark.secondaryText,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     ),
-    bodyLarge: TextStyle(
+    bodyLarge: GoogleFonts.playfairDisplay(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w500,
       fontSize: 16,
     ),
-    bodyMedium: TextStyle(
+    bodyMedium: GoogleFonts.playfairDisplay(
       color: AppColorsDark.secondaryText,
       fontWeight: FontWeight.w400,
       fontSize: 14,
     ),
-    bodySmall: TextStyle(
+    bodySmall: GoogleFonts.playfairDisplay(
       color: AppColorsDark.tertiaryText,
       fontWeight: FontWeight.w400,
       fontSize: 12,
     ),
-    labelLarge: TextStyle(
+    labelLarge: GoogleFonts.playfairDisplay(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     ),
-    labelMedium: TextStyle(
+    labelMedium: GoogleFonts.playfairDisplay(
       color: AppColorsDark.secondaryText,
       fontWeight: FontWeight.w500,
       fontSize: 12,
     ),
-    labelSmall: TextStyle(
+    labelSmall: GoogleFonts.playfairDisplay(
       color: AppColorsDark.tertiaryText,
       fontWeight: FontWeight.w500,
       fontSize: 11,
@@ -390,64 +392,64 @@ class Themes {
     brightness: Brightness.light,
   );
 
-  static final _textThemeLight = const TextTheme(
-    headlineLarge: TextStyle(
+  static final _textThemeLight = TextTheme(
+    headlineLarge: GoogleFonts.playfairDisplay(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.bold,
       fontSize: 32,
       height: 1.1,
     ),
-    headlineMedium: TextStyle(
+    headlineMedium: GoogleFonts.playfairDisplay(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.bold,
       fontSize: 26,
     ),
-    headlineSmall: TextStyle(
+    headlineSmall: GoogleFonts.playfairDisplay(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w700,
       fontSize: 22,
     ),
-    titleLarge: TextStyle(
+    titleLarge: GoogleFonts.playfairDisplay(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w700,
       fontSize: 18,
     ),
-    titleMedium: TextStyle(
+    titleMedium: GoogleFonts.playfairDisplay(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w600,
       fontSize: 16,
     ),
-    titleSmall: TextStyle(
+    titleSmall: GoogleFonts.playfairDisplay(
       color: AppColorsLight.secondaryText,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     ),
-    bodyLarge: TextStyle(
+    bodyLarge: GoogleFonts.playfairDisplay(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w500,
       fontSize: 16,
     ),
-    bodyMedium: TextStyle(
+    bodyMedium: GoogleFonts.playfairDisplay(
       color: AppColorsLight.secondaryText,
       fontWeight: FontWeight.w400,
       fontSize: 14,
     ),
-    bodySmall: TextStyle(
+    bodySmall: GoogleFonts.playfairDisplay(
       color: AppColorsLight.tertiaryText,
       fontWeight: FontWeight.w400,
       fontSize: 12,
     ),
-    labelLarge: TextStyle(
+    labelLarge: GoogleFonts.playfairDisplay(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     ),
-    labelMedium: TextStyle(
+    labelMedium: GoogleFonts.playfairDisplay(
       color: AppColorsLight.secondaryText,
       fontWeight: FontWeight.w500,
       fontSize: 12,
     ),
-    labelSmall: TextStyle(
+    labelSmall: GoogleFonts.playfairDisplay(
       color: AppColorsLight.tertiaryText,
       fontWeight: FontWeight.w500,
       fontSize: 11,

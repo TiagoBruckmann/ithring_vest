@@ -8,7 +8,7 @@ class CoinModel extends CoinEntity with EquatableMixin {
     return CoinModel(
       id: json["id"],
       acronym: json["acronym"],
-      name: json["name"]
+      name: json["name"],
     );
   }
 

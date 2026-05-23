@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +31,8 @@ void main() async {
 
     await FirebasePerformance.instance.setPerformanceCollectionEnabled(!kDebugMode);
 
-    await Session.notifications.init();
-    Session.notifications.receiveNotification();
+    // await Session.notifications.init();
+    // Session.notifications.receiveNotification();
 
     await configureDependencies();
 
@@ -41,7 +40,7 @@ void main() async {
       OverlaySupport(
         child: MaterialApp.router(
           routerConfig: RouterRegister.router,
-          title: "Ithing Vest",
+          title: "IthringVest",
           theme: Themes.lightTheme,
           darkTheme: Themes.darkTheme,
           supportedLocales: supportedLocale,

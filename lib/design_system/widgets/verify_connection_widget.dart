@@ -13,14 +13,14 @@ class VerifyConnectionWidget extends StatelessWidget {
   final List<Widget>? actionWidgets;
   final double bodyPadding;
   final Color? titleColor;
-  final Widget body;
+  final Widget child;
   final Widget? drawer;
   final bool canPop;
   final Function? popFunction;
   final bool isLoading;
   final String loadingMessage;
   final Widget? bottomNavigationBar;
-  const VerifyConnectionWidget({ super.key, this.keyAppBar = "", this.appBarParams, this.actionWidgets, this.bodyPadding = 16, this.titleColor, required this.body, this.drawer, this.canPop = true, this.popFunction, this.isLoading = false, this.loadingMessage = "", this.bottomNavigationBar });
+  const VerifyConnectionWidget({ super.key, this.keyAppBar = "", this.appBarParams, this.actionWidgets, this.bodyPadding = 16, this.titleColor, required this.child, this.drawer, this.canPop = true, this.popFunction, this.isLoading = false, this.loadingMessage = "", this.bottomNavigationBar });
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class VerifyConnectionWidget extends StatelessWidget {
                     ? const NoEthernetWidget()
                     : Padding(
                   padding: EdgeInsets.all(bodyPadding),
-                  child: body,
+                  child: child,
                 ),
                 bottomNavigationBar: ( !connectionMobx.isValidConnection )
                     ? null

@@ -2,9 +2,10 @@ import 'package:equatable/equatable.dart';
 
 class UserEntity extends Equatable {
 
-  final String id, photo, name, email, defaultCoin, currencyFormat;
+  final String id, photo, name, email, defaultCoin, currencyFormat, stepMissing;
   final UserFinancialBalanceEntity financialBalance;
   final double oldBalance;
+  final bool isRegisterFinished;
 
   const UserEntity({
     required this.id,
@@ -13,8 +14,10 @@ class UserEntity extends Equatable {
     required this.email,
     required this.defaultCoin,
     required this.currencyFormat,
+    required this.stepMissing,
     required this.financialBalance,
     required this.oldBalance,
+    required this.isRegisterFinished,
   });
 
   factory UserEntity.empty() => UserEntity(
@@ -24,8 +27,10 @@ class UserEntity extends Equatable {
     email: "",
     defaultCoin: "",
     currencyFormat: "",
+    stepMissing: "",
     financialBalance: UserFinancialBalanceEntity.empty(),
     oldBalance: 0,
+    isRegisterFinished: false,
   );
 
   Map<String, dynamic> registerUserToJson( String password ) {
@@ -34,8 +39,10 @@ class UserEntity extends Equatable {
       "email": email,
       "password": password,
       "default_coin" : defaultCoin,
+      "step_missing" : stepMissing,
       "financial_balance": financialBalance.save(),
       "old_balance": oldBalance,
+      "is_register_finished": isRegisterFinished,
       "created_at": DateTime.now().toIso8601String(),
       "updated_at": "",
     };
@@ -52,6 +59,17 @@ class UserEntity extends Equatable {
       "default_coin" : defaultCoin,
       "financial_balance": financialBalance.save(),
       "old_balance": oldBalance,
+      "updated_at": DateTime.now().toIso8601String(),
+    };
+
+    return map;
+  }
+
+  Map<String, dynamic> updIsRegisterFinishedJson() {
+    Map<String, dynamic> map = {
+      "id": id,
+      "step_missing" : "",
+      "is_register_finished" : true,
       "updated_at": DateTime.now().toIso8601String(),
     };
 
