@@ -1,4 +1,7 @@
 {
+  "shared": {
+    "continue": "Continuar"
+  },
   "pages": {
     "splash": {
       "title1": "Controle Patrimônio. ",
@@ -30,6 +33,14 @@
         "google": "Continuar com Google",
         "no_account": "Ainda não tem uma conta? ",
         "create_account": "Criar conta"
+      },
+      "register": {
+        "welcome": "Vamos começar!",
+        "subtitle": "Crie sua conta para ter o controle total da sua vida financeira.",
+        "primary_currency": "Moeda principal",
+        "at_least_8_characters": "Pelo menos 8 caracteres",
+        "include_letter_and_number": "Inclua números e letras",
+        "include_special_character": "Inclua um caractere especial"
       }
     }
   },
@@ -50,13 +61,57 @@
     }
   },
   "fields": {
+    "name": {
+      "label": "Nome",
+      "hint": "Murtagh"
+    },
     "email": {
       "label": "E-mail",
       "hint": "murtagh@gmail.com"
     },
     "password": {
+      "confirm_password": "Confirmação da senha",
       "label": "Senha",
       "hint": "Digite sua senha"
     }
+  },
+  "validations": {
+    "required": {
+      "field": "O campo {field} é obrigatório."
+    },
+    "invalid": {
+      "min_length": "O campo {field} deve conter no mínimo {min} caracteres.",
+      "max_length": "O campo {field} deve conter no máximo {min} caracteres.",
+      "name": "O nome deve conter apenas letras e espaços, e deve ter entre 3 e 50 caracteres.",
+      "email": "O e-mail fornecido é inválido.",
+      "password": "A senha não corresponde ao exigido",
+      "confirm_password": "Certifique-se que as senhas informadas são idênticas",
+      "email_max_500_characters": "O e-mail excede o tamanho esperado!"
+    }
+  },
+  "coins": {
+    "BRL": "Real Brasileiro",
+    "USD": "Dólar Americano",
+    "EUR": "Euro",
+    "GBP": "Libra Esterlina",
+    "JPY": "Iene Japonês",
+    "CNY": "Yuan Chinês",
+    "AUD": "Dólar Australiano",
+    "CAD": "Dólar Canadense",
+    "CHF": "Franco Suíço",
+    "INR": "Rupia Indiana"
+  },
+  "type_accounts": {
+    "checking": "Conta Corrente",
+    "savings": "Poupança",
+    "cash": "Dinheiro",
+    "cdi": "CDI",
+    "lci_lca": "LCI/LCA",
+    "stocks": "Ações",
+    "etf": "ETF",
+    "bdr": "BDR",
+    "fii": "FIIs",
+    "treasury_bonds": "Títulos do Tesouro",
+    "crypto": "Criptomoedas"
   }
 }

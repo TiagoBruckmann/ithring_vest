@@ -1,19 +1,14 @@
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:ithring_vest/core/domain/enums/currency_enum.dart';
 import 'package:ithring_vest/session.dart';
 
 class CoinFormatter {
 
-  String currencyFormat( String coin ) {
-    return CurrencyEnum.values.firstWhere((currency) => currency.coin.toUpperCase() == coin).format;
-  }
-
   String doubleToCoin( double value ) {
     return MoneyMaskedTextController(
-      leftSymbol: "${Session.user.currencyFormat} ",
+      leftSymbol: "${Session.user.coinSymbol} ",
       initialValue: value,
-      thousandSeparator: ".",
-      decimalSeparator: ",",
+      thousandSeparator: Session.user.thousandSeparator,
+      decimalSeparator: Session.user.decimalSeparator,
       precision: 2,
     ).text;
   }

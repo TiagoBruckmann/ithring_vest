@@ -4,40 +4,28 @@ import 'package:ithring_vest/session.dart';
 
 class FieldsValidationUtils {
 
-  bool _hasUpperOrLowerCase( String value ) {
+  bool hasUpperOrLowerCase( String value ) {
     final hasUpperCase = RegExp(r'[A-Z]');
     final hasLowerCase = RegExp(r'[a-z]');
 
     return hasUpperCase.hasMatch(value) && hasLowerCase.hasMatch(value);
   }
 
-  bool _hasNumber( String value ) {
+  bool hasNumber( String value ) {
     final hasNumber = RegExp(r'[0-9]');
     return hasNumber.hasMatch(value);
-  }
-
-  bool _isValidPassword( String password ) {
-    password = password.trim();
-    final hasUpperOrLowerCase = _hasUpperOrLowerCase(password);
-    final hasNumberVar = _hasNumber(password);
-
-    final specialCharacters = RegExp(r'''[!"#$%&\'()*+,\-./:;<=>?@[\\\]^_`{|}~]''');
-
-    if ( ( password.trim().length < 8 || password.trim().length > 20 ) || !specialCharacters.hasMatch(password) || !hasNumberVar || !hasUpperOrLowerCase ) {
-      return false;
-    }
-
-    return true;
   }
 
   String? validateName( String value ) {
     value = value.trim();
 
     if ( value.isEmpty ) {
-      return _translateErrorMessage("validations.mandatory.name");
+      return _translateErrorMessage("validations.required.field", params: {
+        "field": _translateErrorMessage("fields.name.label"),
+      });
     }
 
-    final hasNumberVar = _hasNumber(value);
+    final hasNumberVar = hasNumber(value);
     final hasSpace = value.contains(" ");
 
     if ( !hasSpace || hasNumberVar ) {
@@ -52,7 +40,9 @@ class FieldsValidationUtils {
     value = value.trim();
 
     if ( value.isEmpty ) {
-      return _translateErrorMessage("validations.mandatory.email");
+      return _translateErrorMessage("validations.required.field", params: {
+        "field": _translateErrorMessage("fields.email.label"),
+      });
     }
 
     if ( !value.contains("@") ) {
@@ -80,47 +70,53 @@ class FieldsValidationUtils {
 
   }
 
-  String? validateFullPhone( String value ) {
-    value = Session.utils.removeAllCharacters(value).replaceAll(" ", "");
-
-    if ( value.isEmpty ) {
-      return _translateErrorMessage("validations.mandatory.phone");
-    }
-
-    if ( value.length < 8 ) {
-      return _translateErrorMessage("validations.invalid.min_8_characters");
-    }
-
-    if ( value.length > 17 ) {
-      return _translateErrorMessage("validations.invalid.max_17_characters");
-    }
-
-    return null;
+  bool isPasswordValidLength( String password ) {
+    return password.trim().length >= 8 && password.trim().length <= 20;
   }
 
-  String? validatePassword( String value, { bool isConfirm = false, String password = "" } ) {
-    value = value.trim();
+  bool isValidPassword( String password ) {
+    password = password.trim();
+    final hasUpperOrLowerCaseVar = hasUpperOrLowerCase(password);
+    final hasNumberVar = hasNumber(password);
 
-    if ( value.isEmpty ) {
-      if ( isConfirm ) {
-        return _translateErrorMessage("validations.mandatory.confirm_password");
-      }
-      return _translateErrorMessage("validations.mandatory.password");
+    final specialCharacters = RegExp(r'''[!"#$%&\'()*+,\-./:;<=>?@[\\\]^_`{|}~]''');
+
+    if ( !isPasswordValidLength(password) || !specialCharacters.hasMatch(password) || !hasNumberVar || !hasUpperOrLowerCaseVar ) {
+      return false;
     }
 
-    if ( !_isValidPassword(value) || value.length < 8 || value.length > 20 ) {
+    return true;
+  }
+
+  String? validatePassword( String password, { bool isConfirm = false, String confirmPassword = "" } ) {
+    password = password.trim();
+    confirmPassword = confirmPassword.trim();
+
+    if ( password.isEmpty || ( isConfirm && confirmPassword.isEmpty ) ) {
+      if ( isConfirm ) {
+        return _translateErrorMessage("validations.required.field", params: {
+          "field": _translateErrorMessage("fields.password.confirm_password"),
+        });
+      }
+
+      return _translateErrorMessage("validations.required.field", params: {
+        "field": _translateErrorMessage("fields.password.label"),
+      });
+    }
+
+    if ( !isValidPassword(password) ) {
       return _translateErrorMessage("validations.invalid.password");
     }
 
-    if ( isConfirm && value != password.trim()) {
+    if ( isConfirm && password != confirmPassword.trim()) {
       return _translateErrorMessage("validations.invalid.confirm_password");
     }
 
     return null;
   }
 
-  String _translateErrorMessage( String errorMessage ) {
-    return FlutterI18n.translate(Session.globalContext.currentContext!, errorMessage);
+  String _translateErrorMessage( String errorMessage, { Map<String, String>? params }) {
+    return FlutterI18n.translate(Session.globalContext.currentContext!, errorMessage, translationParams: params);
   }
 
 }

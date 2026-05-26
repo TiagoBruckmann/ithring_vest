@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class UserEntity extends Equatable {
 
-  final String id, photo, name, email, defaultCoin, currencyFormat, stepMissing;
+  final String id, photo, name, email, coinSymbol, thousandSeparator, decimalSeparator, stepMissing;
   final UserFinancialBalanceEntity financialBalance;
   final double oldBalance;
   final bool isRegisterFinished;
@@ -12,8 +12,9 @@ class UserEntity extends Equatable {
     required this.photo,
     required this.name,
     required this.email,
-    required this.defaultCoin,
-    required this.currencyFormat,
+    required this.coinSymbol,
+    required this.thousandSeparator,
+    required this.decimalSeparator,
     required this.stepMissing,
     required this.financialBalance,
     required this.oldBalance,
@@ -25,8 +26,9 @@ class UserEntity extends Equatable {
     photo: "",
     name: "",
     email: "",
-    defaultCoin: "",
-    currencyFormat: "",
+    coinSymbol: "",
+    thousandSeparator: "",
+    decimalSeparator: "",
     stepMissing: "",
     financialBalance: UserFinancialBalanceEntity.empty(),
     oldBalance: 0,
@@ -38,7 +40,9 @@ class UserEntity extends Equatable {
       "name": name,
       "email": email,
       "password": password,
-      "default_coin" : defaultCoin,
+      "coin_symbol" : coinSymbol,
+      "thousand_separator" : thousandSeparator,
+      "decimal_separator" : decimalSeparator,
       "step_missing" : stepMissing,
       "financial_balance": financialBalance.save(),
       "old_balance": oldBalance,
@@ -56,7 +60,9 @@ class UserEntity extends Equatable {
       "photo" : photo,
       "name" : name,
       "email" : email,
-      "default_coin" : defaultCoin,
+      "coin_symbol" : coinSymbol,
+      "thousand_separator" : thousandSeparator,
+      "decimal_separator" : decimalSeparator,
       "financial_balance": financialBalance.save(),
       "old_balance": oldBalance,
       "updated_at": DateTime.now().toIso8601String(),
@@ -77,10 +83,10 @@ class UserEntity extends Equatable {
   }
 
   @override
-  String toString() => "UserEntity($id, $name, $defaultCoin)";
+  String toString() => "UserEntity($id, $name, $coinSymbol)";
 
   @override
-  List<Object?> get props => [id, name, photo, email, defaultCoin, currencyFormat, financialBalance, oldBalance];
+  List<Object?> get props => [id, name, photo, email, coinSymbol, thousandSeparator, decimalSeparator, financialBalance, oldBalance];
 
 }
 
