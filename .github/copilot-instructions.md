@@ -19,7 +19,13 @@
 - Sempre trate exceptions.
 - Evite hardcoded Strings, utilize as traduções disponíveis no projeto (assets/languages), caso não tenha crie-as e as utilize.
 - Evite hardcoded colors, utilize as cores disponíveis através do Theme.of(context).
-- Sempre utilize o widget VerifyConnectionWidget como widget pai de todas as telas.
+- Sempre utilize o widget VerifyConnectionWidget como widget pai de todas as telas, ele já contém:.
+  - AppBar personalizado.
+  - Scaffold personalizado.
+  - Verificação de conexão com a internet.
+  - Drawer personalizado.
+  - tela de carregamento personalizada.
+  - bottomNavigationBar personalizada.
 - Utilize a tela LoginPage como exemplo de espaçamento, organização e estrutura de código.
 
 ## Android
