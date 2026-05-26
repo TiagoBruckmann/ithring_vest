@@ -19,6 +19,22 @@ class CategoryEntity extends Equatable {
 
   CategoryEntity.empty() : id = "", name = "", coinSymbol = "", thousandSeparator = "", decimalSeparator = "", icon = Icon(Icons.auto_graph_rounded), isRevenue = false, isEssentialExpense = false, valueLimit = 0, valueSpent = 0, percentage = 0;
 
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "coin_symbol": coinSymbol,
+      "thousand_separator": thousandSeparator,
+      "decimal_separator": decimalSeparator,
+      "icon": icon.icon,
+      "value_limit": valueLimit,
+      "value_spent": valueSpent,
+      "percentage": percentage,
+      "is_essential_expense": isEssentialExpense,
+      "is_revenue": isRevenue,
+    };
+  }
+
   @override
   String toString() => "CategoryEntity($id, $name, isRevenue: $isRevenue, isEssentialExpense: $isEssentialExpense)";
 
