@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
+import 'package:ithring_vest/core/domain/entities/user_entity.dart';
+import 'package:ithring_vest/core/domain/usecases/auth_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/category_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/coin_use_case.dart';
 import 'package:ithring_vest/design_system/widgets/toast_widget.dart';
@@ -13,9 +15,11 @@ part 'register_state.dart';
 @injectable
 class RegisterCubit extends Cubit<RegisterState> {
   final CategoryUseCase _categoryUseCase;
+  final AuthUseCase _authUseCase;
   final CoinUseCase _coinUseCase;
   RegisterCubit(
     this._categoryUseCase,
+    this._authUseCase,
     this._coinUseCase,
   ) : super(RegisterCredentialState()) {
     _getInitialData();
@@ -110,6 +114,31 @@ class RegisterCubit extends Cubit<RegisterState> {
     if ( !currentState.formKey.currentState!.validate() ) {
       return showError("toast.error.invalid_fields_red_validations");
     }
+
+    _registerUser();
+  }
+
+  Future<void> _registerUser() async {
+    final currentState = state as RegisterCredentialState;
+    emit(RegisterLoadingState());
+
+    final user = UserEntity.register(
+      currentState.nameController.text.trim(),
+      currentState.emailController.text.trim(),
+      currentState.defaultCoin,
+    );
+
+    final response = await _authUseCase.registerUserWithEmail(user, currentState.passwordController.text.trim());
+    response.fold(
+      (failure) {
+        showError(failure.message);
+        emit(RegisterCredentialState());
+      },
+      (user) {
+        showSuccess("toast.success.user_created");
+        emit(RegisterCategoriesState());
+      },
+    );
 
   }
 

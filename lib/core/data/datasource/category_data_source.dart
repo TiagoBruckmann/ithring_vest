@@ -20,44 +20,72 @@ class CategoryDataSourceImpl implements CategoryDataSource {
 
   @override
   Future<List<CategoryModel>> getDefaultCategories() async {
-    // TODO: implement getDefaultCategories
-    throw UnimplementedError();
+    try {
+      final snapshot = await db.collection("default_categories").get();
+      return snapshot.docs
+          .map((doc) => CategoryModel.fromJson(doc.data()))
+          .toList()
+          ..sort((a, b) => _getCategoryPriority(a).compareTo(_getCategoryPriority(b)));
+
+    } on FirebaseException catch (e, st) {
+      Session.crash.onError("getDefaultCategories_FirebaseException", error: e, stackTrace: st);
+      throw ServerExceptions(e.message ?? e.toString());
+    } catch (e, st) {
+      Session.crash.onError("getDefaultCategories_error", error: e, stackTrace: st);
+      throw GeneralException(e.toString());
+    }
   }
 
   @override
   Future<List<CategoryModel>> getUserCategories( String documentId ) async {
-    final userId = _validateUser();
+    try {
+      final userId = _validateUser();
 
-    List<CategoryModel> list = [];
-    await db.collection("categories")
-      .doc(documentId)
-      .collection(userId)
-      .get()
-      .then((value) {
-          for ( final item in value.docs ) {
-            list.add(CategoryModel.fromJson(item.data()));
-          }
-        })
-    .onError((error, stackTrace) {
-      Session.crash.onError(error.toString(), error: error, stackTrace: stackTrace);
-      throw ServerExceptions(error.toString());
-    })
-    .catchError((onError) {
-      Session.crash.log(onError);
-      throw ServerExceptions(onError.toString());
-    });
+      final snapshot = await db.collection("categories").doc(documentId).collection(userId).get();
+      return snapshot.docs
+          .map((doc) => CategoryModel.fromJson(doc.data()))
+          .toList()
+          ..sort((a, b) => _getCategoryPriority(a).compareTo(_getCategoryPriority(b)));
 
-    return list;
+    } on UnauthorizedException {
+      rethrow;
+    } on FirebaseException catch (e, st) {
+      Session.crash.onError("getUserCategories_FirebaseException", error: e, stackTrace: st);
+      throw ServerExceptions(e.message ?? e.toString());
+    } catch (e, st) {
+      Session.crash.onError("getUserCategories_error", error: e, stackTrace: st);
+      throw GeneralException(e.toString());
+    }
   }
 
   @override
-  Future<void> createUserCategory(Map<String, dynamic> json) async {
-    final userId = _validateUser();
+  Future<void> createUserCategory( Map<String, dynamic> json ) async {
+    try {
+      final userId = _validateUser();
+    } on UnauthorizedException {
+      rethrow;
+    } on FirebaseException catch (e, st) {
+      Session.crash.onError("createUserCategory_FirebaseException", error: e, stackTrace: st);
+      throw ServerExceptions(e.message ?? e.toString());
+    } catch (e, st) {
+      Session.crash.onError("createUserCategory_error", error: e, stackTrace: st);
+      throw GeneralException(e.toString());
+    }
   }
 
   @override
-  Future<void> updateUserCategory(Map<String, dynamic> json) async {
-    final userId = _validateUser();
+  Future<void> updateUserCategory( Map<String, dynamic> json ) async {
+    try {
+      final userId = _validateUser();
+    } on UnauthorizedException {
+      rethrow;
+    } on FirebaseException catch (e, st) {
+      Session.crash.onError("updateUserCategory_FirebaseException", error: e, stackTrace: st);
+      throw ServerExceptions(e.message ?? e.toString());
+    } catch (e, st) {
+      Session.crash.onError("updateUserCategory_error", error: e, stackTrace: st);
+      throw GeneralException(e.toString());
+    }
   }
 
   String _validateUser() {
@@ -65,10 +93,16 @@ class CategoryDataSourceImpl implements CategoryDataSource {
     if ( user == null ) {
       const errorMessage = "User unauthorized to Get Categories";
       Session.crash.onError("CategoryDataSource _validateUser", error: errorMessage);
-
       throw UnauthorizedException(errorMessage);
     }
 
     return user.uid;
   }
+
+  int _getCategoryPriority( CategoryModel category ) {
+    if (category.isEssentialExpense) return 0; // 1º
+    if (!category.isRevenue) return 1; // 2º
+    return 2; // 3º (is_revenue == true)
+  }
+
 }

@@ -15,24 +15,20 @@ class CoinDataSourceImpl implements CoinDataSource {
 
   @override
   Future<List<CoinModel>> getCoins() async {
-    List<CoinModel> list = [];
-    await db.collection("coins")
-      .get()
-      .then((value) {
-          for ( final item in value.docs ) {
-            list.add(CoinModel.fromJson(item.data()));
-          }
-        })
-    .onError((error, stackTrace) {
-      Session.crash.onError(error.toString(), error: error, stackTrace: stackTrace);
-      throw ServerExceptions(error.toString());
-    })
-    .catchError((onError) {
-      Session.crash.log(onError);
-      throw ServerExceptions(onError.toString());
-    });
+    try {
 
-    return list;
+      final snapshot = await db.collection("coins").get();
+      return snapshot.docs
+          .map((doc) => CoinModel.fromJson(doc.data()))
+          .toList();
+
+    } on FirebaseException catch (e, st) {
+      Session.crash.onError("getCoins_FirebaseException", error: e, stackTrace: st);
+      throw ServerExceptions(e.message ?? e.toString());
+    } catch (e, st) {
+      Session.crash.onError("getCoins_error", error: e, stackTrace: st);
+      throw GeneralException(e.toString());
+    }
   }
 
  }

@@ -4,7 +4,7 @@ import 'package:ithring_vest/core/domain/entities/user_entity.dart';
 class UserModel extends UserEntity with EquatableMixin {
   UserModel({required super.id, required super.photo, required super.name, required super.email, required super.coinSymbol, required super.thousandSeparator, required super.decimalSeparator, required super.stepMissing, required super.financialBalance, required super.oldBalance, required super.isRegisterFinished });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromJson( Map<String, dynamic> json ) {
     return UserModel(
       id: json["id"],
       photo: json["photo"],
@@ -20,16 +20,56 @@ class UserModel extends UserEntity with EquatableMixin {
     );
   }
 
+  factory UserModel.fromEntity( UserEntity user ) {
+    return UserModel(
+      id: "",
+      photo: "",
+      name: user.name,
+      email: user.email,
+      coinSymbol: user.coinSymbol,
+      thousandSeparator: user.thousandSeparator,
+      decimalSeparator: user.decimalSeparator,
+      stepMissing: user.stepMissing,
+      financialBalance: UserFinancialBalanceModel.fromEntity(user.financialBalance),
+      oldBalance: user.oldBalance,
+      isRegisterFinished: user.isRegisterFinished,
+    );
+  }
+
+  UserModel setRegisterData( String id, String photo ) {
+    return UserModel(
+      id: id,
+      photo: photo,
+      name: name,
+      email: email,
+      coinSymbol: coinSymbol,
+      thousandSeparator: thousandSeparator,
+      decimalSeparator: decimalSeparator,
+      stepMissing: stepMissing,
+      financialBalance: financialBalance,
+      oldBalance: oldBalance,
+      isRegisterFinished: isRegisterFinished,
+    );
+  }
+
 }
 
 class UserFinancialBalanceModel extends UserFinancialBalanceEntity with EquatableMixin {
   UserFinancialBalanceModel(super.essentialExpenses, super.nonEssentialExpenses, super.investments);
 
-  factory UserFinancialBalanceModel.fromJson(Map<String, dynamic> json) {
+  factory UserFinancialBalanceModel.fromJson( Map<String, dynamic> json ) {
     return UserFinancialBalanceModel(
       json["essential_expenses"],
       json["non_essential_expenses"],
       json["investments"],
+    );
+  }
+
+  factory UserFinancialBalanceModel.fromEntity( UserFinancialBalanceEntity entity ) {
+    return UserFinancialBalanceModel(
+      entity.essentialExpenses,
+      entity.nonEssentialExpenses,
+      entity.investments,
     );
   }
 
