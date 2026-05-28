@@ -5,6 +5,7 @@ import 'package:ithring_vest/core/domain/source/local/injection/injection.dart';
 import 'package:ithring_vest/design_system/widgets/ithring_vest_widget.dart';
 import 'package:ithring_vest/design_system/widgets/verify_connection_widget.dart';
 import 'package:ithring_vest/modules/auth/app/login/cubit/login_cubit.dart';
+import 'package:ithring_vest/modules/auth/routes/auth_path.dart';
 import 'package:ithring_vest/session.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -153,10 +154,6 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () => cubit.validateFields(),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: theme.primaryColor,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
                         ),
                         child: Text(
                           FlutterI18n.translate(context, "pages.login.login.enter_button"),
@@ -230,24 +227,27 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 24),
 
-                    Center(
-                      child: RichText(
-                        text: TextSpan(
-                          text: FlutterI18n.translate(context, "pages.login.login.no_account"),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface,
-                          ),
-                          children: [
-
-                            TextSpan(
-                              text: FlutterI18n.translate(context, "pages.login.login.create_account"),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
+                    GestureDetector(
+                      onTap: () => Session.navigation.push(AuthPath.registerPath.register),
+                      child: Center(
+                        child: RichText(
+                          text: TextSpan(
+                            text: FlutterI18n.translate(context, "pages.login.login.no_account"),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface,
                             ),
+                            children: [
 
-                          ],
+                              TextSpan(
+                                text: FlutterI18n.translate(context, "pages.login.login.create_account"),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+
+                            ],
+                          ),
                         ),
                       ),
                     ),

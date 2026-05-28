@@ -6,7 +6,7 @@ import 'package:ithring_vest/core/data/model/user_model.dart';
 import 'package:ithring_vest/session.dart';
 
 abstract class AuthDataSource {
-  bool verifyConnection();
+  Future<UserModel> verifyConnection();
   Future<UserModel> registerUserWithEmail( UserModel user, String password );
   Future<UserModel> loginWithEmail( Map<String, dynamic> params );
   Future<UserModel> google();
@@ -20,9 +20,27 @@ class AuthDataSourceImpl implements AuthDataSource {
   AuthDataSourceImpl( this.db, this.auth);
 
   @override
-  bool verifyConnection() {
-    User? user = auth.currentUser;
-    return user != null;
+  Future<UserModel> verifyConnection() async {
+    try {
+      User? user = auth.currentUser;
+      if ( user == null ) {
+        String message = "Usuário não autenticado ou sem conta";
+        Session.crash.onError("UserUnauthorized => ", error: message);
+        throw UnauthorizedException(message);
+      }
+
+      final response = await db.collection("users").doc(user.uid).get();
+      if ( !response.exists ) {
+        String message = "Não foi possível encontrar o usuário";
+        Session.crash.onError("UserNotFound => ", error: message);
+        throw UnauthorizedException(message);
+      }
+
+      return UserModel.fromJson(response.data()!);
+    } catch (e) {
+      Session.crash.onError("VerifyConnectionError => ", error: e.toString());
+      throw GeneralException(e.toString());
+    }
   }
 
   @override
@@ -41,11 +59,12 @@ class AuthDataSourceImpl implements AuthDataSource {
         throw ServerExceptions("toast.error.user_register_failed");
       }
 
-      final imageUrl = "https://ui-avatars.com/api/?name=${user.name}";
-      await firebaseUser.updateProfile(displayName: user.name, photoURL: imageUrl);
+      user = user.setRegisterData(firebaseUser.uid);
 
-      user = user.setRegisterData(firebaseUser.uid, imageUrl);
-      await db.collection("users").doc(user.id).set(user.registerUserToJson());
+      await Future.wait([
+        firebaseUser.updateProfile(displayName: user.name, photoURL: user.photoUrl),
+        db.collection("users").doc(user.id).set(user.registerUserToJson(user.id)),
+      ]);
 
       return user;
     } on FirebaseAuthException catch (e, st) {

@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:equatable/equatable.dart';
+import 'package:ithring_vest/core/domain/entities/category_entity.dart';
 import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
 import 'package:ithring_vest/core/domain/entities/user_entity.dart';
+import 'package:ithring_vest/core/domain/enums/step_missing_enum.dart';
 import 'package:ithring_vest/core/domain/usecases/auth_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/category_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/coin_use_case.dart';
@@ -25,23 +27,42 @@ class RegisterCubit extends Cubit<RegisterState> {
     _getInitialData();
   }
 
-  final List<CoinEntity> coins = [];
-
   Future<void> _getInitialData() async {
-    await Future.wait([
-      _getCoins(),
-      _getCategories(),
-    ]);
+    emit(RegisterLoadingState());
+
+    if ( Session.user.stepMissing == StepMissingEnum.categories.name ) {
+      return await _getCategories();
+    }
+
+    if ( Session.user.stepMissing == StepMissingEnum.accounts.name ) {
+      return emit(RegisterAccountsState());
+    }
+
+    if ( Session.user.stepMissing == StepMissingEnum.creditCard.name ) {
+      return emit(RegisterCardState());
+    }
+
+    await _getCoins();
   }
 
   Future<void> _getCoins() async {
     final result = await _coinUseCase.getCoins();
     result.fold(
-      (failure) => showError("toast.error.coins_not_loaded"),
+      (failure) {
+        return emit(
+          RegisterCredentialState(
+            coins: [CoinEntity.defaultBrl()],
+            defaultCoin: CoinEntity.defaultBrl(),
+          ),
+        );
+      },
       (coins) {
-        this.coins.addAll(coins);
-        final brl = coins.firstWhere((coin) => coin.acronym == "BRL", orElse: () => CoinEntity.empty());
-        selectCoin(brl);
+        return emit(
+          RegisterCredentialState(
+            coins: coins,
+            defaultCoin: CoinEntity.defaultBrl(),
+          ),
+        );
       },
     );
   }
@@ -49,8 +70,11 @@ class RegisterCubit extends Cubit<RegisterState> {
   Future<void> _getCategories() async {
     final result = await _categoryUseCase.getDefaultCategories();
     result.fold(
-      (failure) => showError("toast.error.categories_not_loaded"),
-      (categories) {},
+      (failure) {
+        showError("toast.error.categories_not_loaded");
+        return emit(RegisterCredentialState());
+      },
+      (categories) => emit(RegisterCategoriesState(categories: categories)),
     );
   }
 
@@ -87,28 +111,6 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  void validatePwd( String value ) {
-    final currentState = state;
-    if ( currentState is RegisterCredentialState ) {
-      return emit(
-        currentState.copyWith(
-          isValidPassword: Session.fieldsValidation.isValidPassword(value),
-        ),
-      );
-    }
-  }
-
-  void validateConfirmPwd( String value ) {
-    final currentState = state;
-    if ( currentState is RegisterCredentialState ) {
-      return emit(
-        currentState.copyWith(
-          isValidConfirmPassword: Session.fieldsValidation.isValidPassword(value),
-        ),
-      );
-    }
-  }
-
   void validateCredentialsFields() {
     final currentState = state as RegisterCredentialState;
     if ( !currentState.formKey.currentState!.validate() ) {
@@ -134,9 +136,9 @@ class RegisterCubit extends Cubit<RegisterState> {
         showError(failure.message);
         emit(RegisterCredentialState());
       },
-      (user) {
+      (user) async {
         showSuccess("toast.success.user_created");
-        emit(RegisterCategoriesState());
+        return await _getCategories();
       },
     );
 

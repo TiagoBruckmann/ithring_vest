@@ -1,19 +1,17 @@
-import 'dart:math';
-
 import 'package:equatable/equatable.dart';
 import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
 import 'package:ithring_vest/core/domain/enums/step_missing_enum.dart';
 
 class UserEntity extends Equatable {
 
-  final String id, photo, name, email, coinSymbol, thousandSeparator, decimalSeparator, stepMissing;
+  final String id, photoUrl, name, email, coinSymbol, thousandSeparator, decimalSeparator, stepMissing;
   final UserFinancialBalanceEntity financialBalance;
-  final double oldBalance;
+  final num oldBalance;
   final bool isRegisterFinished;
 
   const UserEntity({
     required this.id,
-    required this.photo,
+    required this.photoUrl,
     required this.name,
     required this.email,
     required this.coinSymbol,
@@ -28,7 +26,7 @@ class UserEntity extends Equatable {
   factory UserEntity.empty() {
     return UserEntity(
       id: "",
-      photo: "",
+      photoUrl: "",
       name: "",
       email: "",
       coinSymbol: "",
@@ -44,7 +42,7 @@ class UserEntity extends Equatable {
   factory UserEntity.register( String name, String email, CoinEntity coin ) {
     return UserEntity(
       id: "",
-      photo: "",
+      photoUrl: "",
       name: name,
       email: email,
       coinSymbol: coin.symbol,
@@ -57,9 +55,11 @@ class UserEntity extends Equatable {
     );
   }
 
-  Map<String, dynamic> registerUserToJson() {
+  Map<String, dynamic> registerUserToJson( String userId ) {
     Map<String, dynamic> map = {
+      "id": userId,
       "name": name,
+      "photo_url": photoUrl,
       "email": email,
       "coin_symbol" : coinSymbol,
       "thousand_separator" : thousandSeparator,
@@ -78,7 +78,7 @@ class UserEntity extends Equatable {
   Map<String, dynamic> updUserToJson() {
     Map<String, dynamic> map = {
       "id": id,
-      "photo" : photo,
+      "photo_url" : photoUrl,
       "name" : name,
       "email" : email,
       "coin_symbol" : coinSymbol,
@@ -107,12 +107,12 @@ class UserEntity extends Equatable {
   String toString() => "UserEntity($id, $name, $coinSymbol)";
 
   @override
-  List<Object?> get props => [id, name, photo, email, coinSymbol, thousandSeparator, decimalSeparator, financialBalance, oldBalance];
+  List<Object?> get props => [id, name, photoUrl, email, coinSymbol, thousandSeparator, decimalSeparator, financialBalance, oldBalance];
 
 }
 
 class UserFinancialBalanceEntity extends Equatable {
-  final double essentialExpenses, nonEssentialExpenses, investments;
+  final num essentialExpenses, nonEssentialExpenses, investments;
 
   const UserFinancialBalanceEntity( this.essentialExpenses, this.nonEssentialExpenses, this.investments );
 

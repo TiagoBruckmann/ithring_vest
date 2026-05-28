@@ -110,10 +110,11 @@ void showSuccess( String message, { int seconds = 4, String? subtitle, Map<Strin
     message,
     Icons.check_circle_outline,
     seconds,
-    backgroundColor: Theme.of(Session.globalContext.currentContext!).colorScheme.tertiary,
+    backgroundColor: Theme.of(Session.globalContext.currentContext!).colorScheme.onSecondary,
     subtitle: subtitle,
     titleTranslationParams: titleTranslationParams,
     subtitleTranslationParams: subtitleTranslationParams,
+    textColor: Theme.of(Session.globalContext.currentContext!).colorScheme.onPrimary,
   ).showToastWidget();
 }
 

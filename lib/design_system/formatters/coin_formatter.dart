@@ -9,6 +9,15 @@ class CoinFormatter {
       initialValue: value,
       thousandSeparator: Session.user.thousandSeparator,
       decimalSeparator: Session.user.decimalSeparator,
+      rightSymbol: "%",
+      precision: 2,
+    ).text;
+  }
+
+  String doubleToPercentage( double value ) {
+    return MoneyMaskedTextController(
+      initialValue: value,
+      thousandSeparator: ".",
       precision: 2,
     ).text;
   }

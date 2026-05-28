@@ -69,7 +69,7 @@ Widget showDefaultDialog({
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         ),
         child: Text(
-          FlutterI18n.translate(builder, textCancel ?? "btn_cancel"),
+          FlutterI18n.translate(builder, textCancel ?? "shared.btn_cancel"),
           style: theme.textTheme.bodySmall!.copyWith(
             color: cancelTextColor ?? theme.colorScheme.primary,
             fontWeight: FontWeight.bold,

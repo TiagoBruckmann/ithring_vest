@@ -13,7 +13,7 @@ class Themes {
     primary: AppColorsDark.primaryGreen,
     secondary: AppColorsDark.primaryPurple,
     surface: AppColorsDark.cardsBackground,
-    error: AppColorsDark.error,
+    error: AppColorsDark.expenses,
     onPrimary: AppColorsDark.primaryText,
     onSecondary: AppColorsDark.hoverGreen,
     onSurface: AppColorsDark.secondaryText,
@@ -23,63 +23,63 @@ class Themes {
   );
 
   static final _textThemeDark = TextTheme(
-    headlineLarge: GoogleFonts.playfairDisplay(
+    headlineLarge: GoogleFonts.figtree(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.bold,
       fontSize: 32,
       height: 1.1,
     ),
-    headlineMedium: GoogleFonts.playfairDisplay(
+    headlineMedium: GoogleFonts.figtree(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.bold,
       fontSize: 26,
     ),
-    headlineSmall: GoogleFonts.playfairDisplay(
+    headlineSmall: GoogleFonts.figtree(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w700,
       fontSize: 22,
     ),
-    titleLarge: GoogleFonts.playfairDisplay(
+    titleLarge: GoogleFonts.figtree(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w700,
       fontSize: 18,
     ),
-    titleMedium: GoogleFonts.playfairDisplay(
+    titleMedium: GoogleFonts.figtree(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w600,
       fontSize: 16,
     ),
-    titleSmall: GoogleFonts.playfairDisplay(
+    titleSmall: GoogleFonts.figtree(
       color: AppColorsDark.secondaryText,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     ),
-    bodyLarge: GoogleFonts.playfairDisplay(
+    bodyLarge: GoogleFonts.figtree(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w500,
       fontSize: 16,
     ),
-    bodyMedium: GoogleFonts.playfairDisplay(
+    bodyMedium: GoogleFonts.figtree(
       color: AppColorsDark.secondaryText,
       fontWeight: FontWeight.w400,
       fontSize: 14,
     ),
-    bodySmall: GoogleFonts.playfairDisplay(
+    bodySmall: GoogleFonts.figtree(
       color: AppColorsDark.tertiaryText,
       fontWeight: FontWeight.w400,
       fontSize: 12,
     ),
-    labelLarge: GoogleFonts.playfairDisplay(
+    labelLarge: GoogleFonts.figtree(
       color: AppColorsDark.primaryText,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     ),
-    labelMedium: GoogleFonts.playfairDisplay(
+    labelMedium: GoogleFonts.figtree(
       color: AppColorsDark.secondaryText,
       fontWeight: FontWeight.w500,
       fontSize: 12,
     ),
-    labelSmall: GoogleFonts.playfairDisplay(
+    labelSmall: GoogleFonts.figtree(
       color: AppColorsDark.tertiaryText,
       fontWeight: FontWeight.w500,
       fontSize: 11,
@@ -176,13 +176,13 @@ class Themes {
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
         borderSide: const BorderSide(
-          color: AppColorsDark.error,
+          color: AppColorsDark.expenses,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
         borderSide: const BorderSide(
-          color: AppColorsDark.error,
+          color: AppColorsDark.expenses,
           width: 1.4,
         ),
       ),
@@ -196,9 +196,9 @@ class Themes {
         disabledForegroundColor: AppColorsDark.unableText,
         elevation: 0,
         shadowColor: Colors.transparent,
-        minimumSize: const Size(double.infinity, 58),
+        padding: const EdgeInsets.all(12),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(12),
         ),
         textStyle: const TextStyle(
           fontSize: 15,
@@ -209,12 +209,12 @@ class Themes {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColorsDark.primaryText,
-        minimumSize: const Size(double.infinity, 58),
+        padding: const EdgeInsets.all(12),
         side: BorderSide(
           color: Colors.white.withValues(alpha: 0.08),
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(12),
         ),
         textStyle: const TextStyle(
           fontWeight: FontWeight.w600,
@@ -386,70 +386,70 @@ class Themes {
     surface: AppColorsLight.cardsBackground,
     error: AppColorsLight.error,
     onPrimary: AppColorsLight.primaryText,
-    onSecondary: AppColorsLight.primaryText,
+    onSecondary: AppColorsLight.hoverGreen,
     onSurface: AppColorsLight.primaryText,
     onError: AppColorsLight.primaryText,
     brightness: Brightness.light,
   );
 
   static final _textThemeLight = TextTheme(
-    headlineLarge: GoogleFonts.playfairDisplay(
+    headlineLarge: GoogleFonts.figtree(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.bold,
       fontSize: 32,
       height: 1.1,
     ),
-    headlineMedium: GoogleFonts.playfairDisplay(
+    headlineMedium: GoogleFonts.figtree(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.bold,
       fontSize: 26,
     ),
-    headlineSmall: GoogleFonts.playfairDisplay(
+    headlineSmall: GoogleFonts.figtree(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w700,
       fontSize: 22,
     ),
-    titleLarge: GoogleFonts.playfairDisplay(
+    titleLarge: GoogleFonts.figtree(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w700,
       fontSize: 18,
     ),
-    titleMedium: GoogleFonts.playfairDisplay(
+    titleMedium: GoogleFonts.figtree(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w600,
       fontSize: 16,
     ),
-    titleSmall: GoogleFonts.playfairDisplay(
+    titleSmall: GoogleFonts.figtree(
       color: AppColorsLight.secondaryText,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     ),
-    bodyLarge: GoogleFonts.playfairDisplay(
+    bodyLarge: GoogleFonts.figtree(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w500,
       fontSize: 16,
     ),
-    bodyMedium: GoogleFonts.playfairDisplay(
+    bodyMedium: GoogleFonts.figtree(
       color: AppColorsLight.secondaryText,
       fontWeight: FontWeight.w400,
       fontSize: 14,
     ),
-    bodySmall: GoogleFonts.playfairDisplay(
+    bodySmall: GoogleFonts.figtree(
       color: AppColorsLight.tertiaryText,
       fontWeight: FontWeight.w400,
       fontSize: 12,
     ),
-    labelLarge: GoogleFonts.playfairDisplay(
+    labelLarge: GoogleFonts.figtree(
       color: AppColorsLight.primaryText,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     ),
-    labelMedium: GoogleFonts.playfairDisplay(
+    labelMedium: GoogleFonts.figtree(
       color: AppColorsLight.secondaryText,
       fontWeight: FontWeight.w500,
       fontSize: 12,
     ),
-    labelSmall: GoogleFonts.playfairDisplay(
+    labelSmall: GoogleFonts.figtree(
       color: AppColorsLight.tertiaryText,
       fontWeight: FontWeight.w500,
       fontSize: 11,

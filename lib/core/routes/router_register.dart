@@ -6,6 +6,7 @@ import 'package:ithring_vest/design_system/style/app_images.dart';
 import 'package:ithring_vest/design_system/widgets/verify_connection_widget.dart';
 import 'package:ithring_vest/modules/auth/routes/auth_path.dart';
 import 'package:ithring_vest/modules/auth/routes/auth_route.dart';
+import 'package:ithring_vest/modules/dashboard/routes/dash_route.dart';
 import 'package:ithring_vest/session.dart';
 
 class RouterRegister {
@@ -16,7 +17,7 @@ class RouterRegister {
     errorBuilder: ( context, state ) => _errorRoute( context ),
     routes: [
       ...AuthRoute.getInstance().routes,
-      // ...DashRoute.getInstance().routes,
+      ...DashRoute.getInstance().routes,
       // ...SettingsRoute.getInstance().routes,
       // ...NewSaleRoute.getInstance().routes,
     ],

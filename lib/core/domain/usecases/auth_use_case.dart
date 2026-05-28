@@ -9,8 +9,8 @@ class AuthUseCase {
   final AuthRepo _repo;
   AuthUseCase( this._repo );
 
-  bool verifyConnection() {
-    return _repo.verifyConnection();
+  Future<Either<Failure, UserEntity>> verifyConnection() async {
+    return await _repo.verifyConnection();
   }
 
   Future<Either<Failure, UserEntity>> registerUserWithEmail( UserEntity user, String password ) async {

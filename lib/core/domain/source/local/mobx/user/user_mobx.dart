@@ -21,6 +21,8 @@ abstract class _UserMobx with Store {
 
   @action
   void setUser( UserEntity newUser ) {
+    Session.notifications.login(newUser.id);
+    Session.crash.userConnected(newUser.id);
     Session.user = newUser;
     user = newUser;
   }

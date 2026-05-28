@@ -13,11 +13,10 @@ class RegisterCredentialState extends RegisterState {
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
   final GlobalKey<FormState> formKey;
+  final List<CoinEntity> coins;
   final CoinEntity defaultCoin;
   final bool obscurePassword;
   final bool obscureConfirmPassword;
-  final bool isValidPassword;
-  final bool isValidConfirmPassword;
 
   RegisterCredentialState({
     TextEditingController? nameController,
@@ -25,11 +24,10 @@ class RegisterCredentialState extends RegisterState {
     TextEditingController? passwordController,
     TextEditingController? confirmPasswordController,
     GlobalKey<FormState>? formKey,
+    this.defaultCoin = const CoinEntity.defaultBrl(),
+    this.coins = const [],
     this.obscurePassword = true,
     this.obscureConfirmPassword = true,
-    this.defaultCoin = const CoinEntity.defaultBrl(),
-    this.isValidPassword = false,
-    this.isValidConfirmPassword = false,
   }) : nameController = nameController ?? TextEditingController(),
       emailController = emailController ?? TextEditingController(),
       passwordController = passwordController ?? TextEditingController(),
@@ -37,34 +35,44 @@ class RegisterCredentialState extends RegisterState {
       formKey = formKey ?? GlobalKey<FormState>();
 
   RegisterCredentialState copyWith({
+    List<CoinEntity>? coins,
     bool? obscurePassword,
     bool? obscureConfirmPassword,
     CoinEntity? defaultCoin,
-    bool? isValidPassword,
-    bool? isValidConfirmPassword,
   }) {
     return RegisterCredentialState(
+      nameController: nameController,
+      emailController: emailController,
+      passwordController: passwordController,
+      confirmPasswordController: confirmPasswordController,
+      coins: coins ?? this.coins,
       obscurePassword: obscurePassword ?? this.obscurePassword,
       obscureConfirmPassword: obscureConfirmPassword ?? this.obscureConfirmPassword,
       defaultCoin: defaultCoin ?? this.defaultCoin,
-      isValidPassword: isValidPassword ?? this.isValidPassword,
-      isValidConfirmPassword: isValidConfirmPassword ?? this.isValidConfirmPassword,
     );
   }
 
   @override
-  List<Object?> get props => [nameController, emailController, passwordController, formKey, obscurePassword, defaultCoin];
+  List<Object?> get props => [nameController, emailController, passwordController, confirmPasswordController, formKey, coins, defaultCoin, obscurePassword, obscureConfirmPassword];
 }
 
 class RegisterCategoriesState extends RegisterState {
-  const RegisterCategoriesState();
+  final List<CategoryEntity> categories;
+  const RegisterCategoriesState({required this.categories});
+
+  @override
+  List<Object?> get props => [categories];
+}
+
+class RegisterAccountsState extends RegisterState {
+  const RegisterAccountsState();
 
   @override
   List<Object?> get props => [];
 }
 
-class RegisterAccountsState extends RegisterState {
-  const RegisterAccountsState();
+class RegisterCardState extends RegisterState {
+  const RegisterCardState();
 
   @override
   List<Object?> get props => [];

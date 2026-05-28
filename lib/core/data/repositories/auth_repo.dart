@@ -7,7 +7,7 @@ import 'package:ithring_vest/core/domain/entities/user_entity.dart';
 import 'package:ithring_vest/core/domain/failures/failure.dart';
 
 abstract class AuthRepo {
-  bool verifyConnection();
+  Future<Either<Failure, UserEntity>> verifyConnection();
   Future<Either<Failure, UserEntity>> registerUserWithEmail( UserEntity user, String password );
   Future<Either<Failure, UserEntity>> loginWithEmail( Map<String, dynamic> params );
   Future<Either<Failure, UserEntity>> google();
@@ -20,8 +20,15 @@ class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl( this._dataSource );
 
   @override
-  bool verifyConnection() {
-    return _dataSource.verifyConnection();
+  Future<Either<Failure, UserEntity>> verifyConnection() async {
+    try {
+      final result = await _dataSource.verifyConnection();
+      return Right(result);
+    } on UnauthorizedException catch (e) {
+      return left(UnauthorizedFailure(e.message));
+    } catch (e) {
+      return left(GeneralFailure(e.toString()));
+    }
   }
 
   @override
@@ -29,7 +36,7 @@ class AuthRepoImpl implements AuthRepo {
     try {
       final result = await _dataSource.registerUserWithEmail(UserModel.fromEntity(user), password);
       return Right(result);
-    }  on WeekPasswordException catch (e) {
+    } on WeekPasswordException catch (e) {
       return left(WeekPasswordFailure(e.message));
     } on EmailUsedException catch (e) {
       return left(UsedEmailFailure(e.message));

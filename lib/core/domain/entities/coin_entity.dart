@@ -2,24 +2,23 @@ import 'package:equatable/equatable.dart';
 
 class CoinEntity extends Equatable {
 
-  final String id, name, acronym, symbol, thousandSeparator, decimalSeparator;
+  final String name, acronym, symbol, thousandSeparator, decimalSeparator;
 
   const CoinEntity({
-    required this.id, required this.name, required this.acronym,
+    required this.name, required this.acronym,
     required this.symbol, required this.thousandSeparator,
     required this.decimalSeparator,
   });
 
-  const CoinEntity.empty() : id = "", name = "", acronym = "", symbol = "", thousandSeparator = "", decimalSeparator = "";
+  const CoinEntity.empty() : name = "", acronym = "", symbol = "", thousandSeparator = "", decimalSeparator = "";
 
-  const CoinEntity.defaultBrl() : id = "2jE5GBH4pT9zhSEBkwaC", name = "coins.BRL", acronym = "BRL", symbol = "R\$", thousandSeparator = ".", decimalSeparator = ",";
+  const CoinEntity.defaultBrl() : name = "coins.BRL", acronym = "BRL", symbol = "R\$", thousandSeparator = ".", decimalSeparator = ",";
 
   @override
-  String toString() => "CoinEntity($id, $name, $acronym, $symbol)";
+  String toString() => "CoinEntity($name, $acronym, $symbol)";
 
   @override
   List<Object?> get props => [
-    id,
     name,
     acronym,
     symbol,

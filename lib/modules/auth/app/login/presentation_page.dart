@@ -105,18 +105,12 @@ class PresentationPage extends StatelessWidget {
 
                 buildFeatureCard(Icons.public, "multi_currency"),
 
-                const SizedBox(height: 90),
+                const SizedBox(height: 110),
 
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => Session.navigation.push(AuthPath.loginPath.login),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    onPressed: () => Session.navigation.push(AuthPath.registerPath.register),
                     child: Text(
                       FlutterI18n.translate(context, "pages.login.presentation.create_account"),
                       style: theme.textTheme.titleMedium!.apply(
@@ -131,11 +125,10 @@ class PresentationPage extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () { },
+                    onPressed: () => Session.navigation.push(AuthPath.loginPath.login),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Color(0xFF4A4A6A)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(
+                        color: theme.colorScheme.secondary,
                       ),
                     ),
                     child: Text(

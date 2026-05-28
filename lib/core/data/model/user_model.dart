@@ -2,12 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:ithring_vest/core/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity with EquatableMixin {
-  UserModel({required super.id, required super.photo, required super.name, required super.email, required super.coinSymbol, required super.thousandSeparator, required super.decimalSeparator, required super.stepMissing, required super.financialBalance, required super.oldBalance, required super.isRegisterFinished });
+  UserModel({required super.id, required super.photoUrl, required super.name, required super.email, required super.coinSymbol, required super.thousandSeparator, required super.decimalSeparator, required super.stepMissing, required super.financialBalance, required super.oldBalance, required super.isRegisterFinished });
 
   factory UserModel.fromJson( Map<String, dynamic> json ) {
     return UserModel(
       id: json["id"],
-      photo: json["photo"],
+      photoUrl: json["photo_url"],
       name: json["name"],
       email: json["email"],
       coinSymbol: json["coin_symbol"],
@@ -23,7 +23,7 @@ class UserModel extends UserEntity with EquatableMixin {
   factory UserModel.fromEntity( UserEntity user ) {
     return UserModel(
       id: "",
-      photo: "",
+      photoUrl: "",
       name: user.name,
       email: user.email,
       coinSymbol: user.coinSymbol,
@@ -36,10 +36,10 @@ class UserModel extends UserEntity with EquatableMixin {
     );
   }
 
-  UserModel setRegisterData( String id, String photo ) {
+  UserModel setRegisterData( String id ) {
     return UserModel(
       id: id,
-      photo: photo,
+      photoUrl: "https://ui-avatars.com/api/?name=$name",
       name: name,
       email: email,
       coinSymbol: coinSymbol,
