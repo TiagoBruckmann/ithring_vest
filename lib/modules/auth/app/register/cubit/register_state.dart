@@ -58,7 +58,119 @@ class RegisterCredentialState extends RegisterState {
 
 class RegisterCategoriesState extends RegisterState {
   final List<CategoryEntity> categories;
-  const RegisterCategoriesState({required this.categories});
+  final List<CategoryEntity> selectedCategories;
+  const RegisterCategoriesState({ required this.categories, this.selectedCategories = const []});
+
+  RegisterCategoriesState copyWith({
+    List<CategoryEntity>? selectedCategories,
+  }) {
+    return RegisterCategoriesState(
+      categories: categories,
+      selectedCategories: selectedCategories ?? this.selectedCategories,
+    );
+  }
+
+  List<CategoryEntity> getRevenueCategoriesList() {
+    final List<CategoryEntity> list = [];
+    for ( final category in categories ) {
+      if ( category.isRevenue ) {
+        list.add(category);
+      }
+    }
+
+    categories.removeWhere((category) => category.isRevenue);
+    return list;
+  }
+
+  List<CategoryEntity> getEssentialCategoriesList() {
+    final List<CategoryEntity> list = [];
+    for ( final category in categories ) {
+      if ( category.isEssentialExpense ) {
+        list.add(category);
+      }
+    }
+
+    categories.removeWhere((category) => category.isEssentialExpense);
+    return list;
+  }
+
+  List<CategoryEntity> getNonEssentialCategoriesList() {
+    final List<CategoryEntity> list = [];
+    for ( final category in categories ) {
+      if ( !category.isEssentialExpense ) {
+        list.add(category);
+      }
+    }
+
+    categories.removeWhere((category) => !category.isEssentialExpense);
+    return list;
+  }
+
+  @override
+  List<Object?> get props => [categories];
+}
+
+class RegisterCategoriesSelectedState extends RegisterState {
+  final List<CategoryEntity> categories;
+  final List<Map<String, MoneyMaskedTextController>> valueLimitController;
+  final List<Map<String, bool>> isDefaultCoin;
+  final List<Map<String, CoinEntity>> categoriesCoin;
+  const RegisterCategoriesSelectedState({
+    required this.categories,
+    this.valueLimitController = const [],
+    this.isDefaultCoin = const [],
+    this.categoriesCoin = const [],
+  });
+
+  RegisterCategoriesSelectedState copyWith({
+    List<CategoryEntity>? categories,
+    List<Map<String, MoneyMaskedTextController>>? valueLimitController,
+    List<Map<String, bool>>? isDefaultCoin,
+    List<Map<String, CoinEntity>>? categoriesCoin,
+  }) {
+    return RegisterCategoriesSelectedState(
+      categories: categories ?? this.categories,
+      valueLimitController: valueLimitController ?? this.valueLimitController,
+      isDefaultCoin: isDefaultCoin ?? this.isDefaultCoin,
+      categoriesCoin: categoriesCoin ?? this.categoriesCoin,
+    );
+  }
+
+  List<CategoryEntity> getRevenueCategoriesList() {
+    final List<CategoryEntity> list = [];
+    for ( final category in categories ) {
+      if ( category.isRevenue ) {
+        list.add(category);
+      }
+    }
+
+    categories.removeWhere((category) => category.isRevenue);
+    return list;
+  }
+
+  List<CategoryEntity> getEssentialCategoriesList() {
+    final List<CategoryEntity> list = [];
+    for ( final category in categories ) {
+      if ( category.isEssentialExpense ) {
+        list.add(category);
+      }
+    }
+
+    categories.removeWhere((category) => category.isEssentialExpense);
+    return list;
+  }
+
+  List<CategoryEntity> getNonEssentialCategoriesList() {
+    final List<CategoryEntity> list = [];
+    for ( final category in categories ) {
+      if ( !category.isEssentialExpense ) {
+        list.add(category);
+      }
+    }
+
+    categories.removeWhere((category) => !category.isEssentialExpense);
+    return list;
+  }
 
   @override
   List<Object?> get props => [categories];

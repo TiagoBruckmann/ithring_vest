@@ -7,7 +7,8 @@ import 'package:ithring_vest/session.dart';
 
 abstract class CategoryDataSource {
   Future<List<CategoryModel>> getDefaultCategories();
-  Future<List<CategoryModel>> getUserCategories( String documentId );
+  Future<List<CategoryModel>> getUserCategories();
+  Future<void> createUserCategories( List<CategoryModel> categories );
   Future<void> createUserCategory( Map<String, dynamic> json );
   Future<void> updateUserCategory( Map<String, dynamic> json );
 }
@@ -37,11 +38,17 @@ class CategoryDataSourceImpl implements CategoryDataSource {
   }
 
   @override
-  Future<List<CategoryModel>> getUserCategories( String documentId ) async {
+  Future<List<CategoryModel>> getUserCategories() async {
     try {
       final userId = _validateUser();
 
-      final snapshot = await db.collection("categories").doc(documentId).collection(userId).get();
+      final dateNow = DateTime.now();
+      int year = dateNow.year;
+      int month = dateNow.month;
+
+      String date = "$year-${Session.utils.parseNumberLessThan10(month)}";
+
+      final snapshot = await db.collection("categories").doc(date).collection(userId).get();
       return snapshot.docs
           .map((doc) => CategoryModel.fromJson(doc.data()))
           .toList()
@@ -54,6 +61,57 @@ class CategoryDataSourceImpl implements CategoryDataSource {
       throw ServerExceptions(e.message ?? e.toString());
     } catch (e, st) {
       Session.crash.onError("getUserCategories_error", error: e, stackTrace: st);
+      throw GeneralException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> createUserCategories( List<CategoryModel> categories ) async {
+    try {
+      final userId = _validateUser();
+
+      const int batchLimit = 500;
+
+      final dateNow = DateTime.now();
+      int year = dateNow.year;
+      int month = dateNow.month;
+
+      String date = "$year-${Session.utils.parseNumberLessThan10(month)}";
+      int qtdMonths = 0;
+
+      // Cadastra para os próximos 5 anos (60 vezes).
+      do {
+
+        for ( int i = 0; i < categories.length; i += batchLimit ) {
+          final end = (i + batchLimit < categories.length) ? i + batchLimit : categories.length;
+          final WriteBatch batch = db.batch();
+
+          for ( int j = i; j < end; j++ ) {
+            CategoryModel category = categories[j];
+            final DocumentReference docRef = db.collection("categories").doc(date).collection(userId).doc(category.id);
+            batch.set(docRef, category);
+          }
+
+          await batch.commit();
+        }
+
+        qtdMonths++;
+        if ( month > 12 ) {
+          year++;
+          month = 1;
+        }
+        date = "$year-${Session.utils.parseNumberLessThan10(month)}";
+
+      // } while ( qtdMonths < 60 );
+      } while ( qtdMonths < 1 );
+
+    } on UnauthorizedException {
+      rethrow;
+    } on FirebaseException catch (e, st) {
+      Session.crash.onError("createUserCategories_FirebaseException", error: e, stackTrace: st);
+      throw ServerExceptions(e.message ?? e.toString());
+    } catch (e, st) {
+      Session.crash.onError("createUserCategories_error", error: e, stackTrace: st);
       throw GeneralException(e.toString());
     }
   }

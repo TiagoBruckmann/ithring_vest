@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:injectable/injectable.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ithring_vest/core/domain/entities/category_entity.dart';
@@ -31,7 +32,11 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterLoadingState());
 
     if ( Session.user.stepMissing == StepMissingEnum.categories.name ) {
-      return await _getCategories();
+      return await _getDefaultCategories();
+    }
+
+    if ( Session.user.stepMissing == StepMissingEnum.categoriesSelected.name ) {
+      return await _getUserCategories();
     }
 
     if ( Session.user.stepMissing == StepMissingEnum.accounts.name ) {
@@ -67,7 +72,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     );
   }
 
-  Future<void> _getCategories() async {
+  Future<void> _getDefaultCategories() async {
     final result = await _categoryUseCase.getDefaultCategories();
     result.fold(
       (failure) {
@@ -75,6 +80,17 @@ class RegisterCubit extends Cubit<RegisterState> {
         return emit(RegisterCredentialState());
       },
       (categories) => emit(RegisterCategoriesState(categories: categories)),
+    );
+  }
+
+  Future<void> _getUserCategories() async {
+    final result = await _categoryUseCase.getUserCategories();
+    result.fold(
+      (failure) {
+        showError("toast.error.categories_not_loaded");
+        return emit(RegisterCategoriesState(categories: []));
+      },
+      (categories) => emit(RegisterCategoriesSelectedState(categories: categories)),
     );
   }
 
@@ -138,7 +154,52 @@ class RegisterCubit extends Cubit<RegisterState> {
       },
       (user) async {
         showSuccess("toast.success.user_created");
-        return await _getCategories();
+        return await _getDefaultCategories();
+      },
+    );
+
+  }
+
+  void toggleCategorySelection( CategoryEntity category ) {
+    final currentState = state as RegisterCategoriesState;
+    final selected = List<CategoryEntity>.from(currentState.selectedCategories);
+
+    if ( selected.contains(category) ) {
+      selected.remove(category);
+    } else {
+      selected.add(category);
+    }
+
+    emit(currentState.copyWith(selectedCategories: selected));
+  }
+
+  void validateCategoriesSelection() {
+    final currentState = state as RegisterCategoriesState;
+    final revenueCategory = currentState.selectedCategories.firstWhere((category) => category.isRevenue, orElse: () => CategoryEntity.empty());
+    final essentialCategory = currentState.selectedCategories.firstWhere((category) => category.isEssentialExpense, orElse: () => CategoryEntity.empty());
+
+    if ( revenueCategory.id.trim().isEmpty || essentialCategory.id.trim().isEmpty ) {
+      return showError("toast.error.categories");
+    }
+
+    _registerUserCategories();
+  }
+
+  Future<void> _registerUserCategories() async {
+    final currentState = state as RegisterCategoriesState;
+    emit(RegisterLoadingState());
+
+    final response = await _categoryUseCase.createUserCategories(currentState.selectedCategories);
+    response.fold(
+      (failure) {
+        showError(failure.message);
+        emit(RegisterCategoriesState(categories: [], selectedCategories: currentState.selectedCategories));
+      },
+      (categories) async {
+        showSuccess("toast.success.categories_created");
+        return emit(
+          RegisterCategoriesSelectedState(categories: categories),
+        );
       },
     );
 

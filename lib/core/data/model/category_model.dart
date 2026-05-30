@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:ithring_vest/core/domain/entities/category_entity.dart';
+import 'package:ithring_vest/session.dart';
 
 class CategoryModel extends CategoryEntity with EquatableMixin {
   CategoryModel(super.id, super.name, super.icon, super.isRevenue, super.isEssentialExpense, super.valueLimit, super.valueSpent, super.percentage, { super.coinSymbol = "", super.thousandSeparator = "", super.decimalSeparator = "" });
@@ -18,6 +19,22 @@ class CategoryModel extends CategoryEntity with EquatableMixin {
       coinSymbol: json["coin_symbol"],
       thousandSeparator: json["thousand_separator"],
       decimalSeparator: json["decimal_separator"],
+    );
+  }
+
+  factory CategoryModel.fromEntity( CategoryEntity entity ) {
+    return CategoryModel(
+      Session.utils.getRandomString(20),
+      entity.name,
+      entity.icon,
+      entity.isRevenue,
+      entity.isEssentialExpense,
+      entity.valueLimit,
+      entity.valueLimit,
+      entity.percentage,
+      coinSymbol: entity.coinSymbol,
+      thousandSeparator: entity.thousandSeparator,
+      decimalSeparator: entity.decimalSeparator,
     );
   }
 

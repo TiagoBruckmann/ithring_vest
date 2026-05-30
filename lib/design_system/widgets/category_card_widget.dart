@@ -72,45 +72,40 @@ class CategoryCardWidget extends StatelessWidget {
                           ),
                           children: [
 
-                            if ( category.valueLimit > 0 )
-                              TextSpan(
-                                text: " Mensal",
-                                style: theme.textTheme.bodyMedium,
-                              ),
+                            TextSpan(
+                              text: " Mensal",
+                              style: theme.textTheme.bodyMedium,
+                            ),
 
                           ],
                         ),
                       ),
 
-                      if ( category.valueLimit > 0 )
-                        Text(
-                          "${Session.coinFormatter.doubleToCoin(category.valueSpent)} / ${Session.coinFormatter.doubleToCoin(category.valueLimit)}",
-                          style: theme.textTheme.bodyMedium,
-                        ),
+                      Text(
+                        "${Session.coinFormatter.doubleToCoin(category.valueSpent)} / ${Session.coinFormatter.doubleToCoin(category.valueLimit)}",
+                        style: theme.textTheme.bodyMedium,
+                      ),
 
                     ],
                   ),
 
-                  if ( category.percentage > 0 )
-                    Text(
-                      Session.coinFormatter.doubleToPercentage(category.percentage),
-                      style: theme.textTheme.titleLarge!.apply(
-                        color: color,
-                      ),
+                  Text(
+                    Session.coinFormatter.doubleToPercentage(category.percentage),
+                    style: theme.textTheme.titleLarge!.apply(
+                      color: color,
                     ),
+                  ),
 
                 ],
               ),
 
             ],
           ),
-          subtitle: ( category.percentage > 0 )
-            ? LinearProgressIndicator(
-              minHeight: 5,
-              value: category.percentage / 100,
-              color: color,
-            )
-            : null,
+          subtitle: LinearProgressIndicator(
+            minHeight: 5,
+            value: category.percentage / 100,
+            color: color,
+          ),
         ),
       ),
     );

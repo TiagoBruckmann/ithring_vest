@@ -13,8 +13,12 @@ class CategoryUseCase {
     return await _repo.getDefaultCategories();
   }
 
-  Future<Either<Failure, List<CategoryEntity>>> getUserCategories( String documentId ) async {
-    return await _repo.getUserCategories(documentId);
+  Future<Either<Failure, List<CategoryEntity>>> getUserCategories() async {
+    return await _repo.getUserCategories();
+  }
+
+  Future<Either<Failure, List<CategoryEntity>>> createUserCategories( List<CategoryEntity> categories ) async {
+    return await _repo.createUserCategories(categories);
   }
 
   Future<Either<Failure, void>> createUserCategory( CategoryEntity category ) async {
