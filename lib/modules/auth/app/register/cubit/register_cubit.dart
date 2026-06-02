@@ -161,22 +161,33 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   void toggleCategorySelection( CategoryEntity category ) {
-    final currentState = state as RegisterCategoriesState;
-    final selected = List<CategoryEntity>.from(currentState.selectedCategories);
+    final currentState = state;
+    if ( currentState is RegisterCategoriesState ) {
 
-    if ( selected.contains(category) ) {
-      selected.remove(category);
-    } else {
-      selected.add(category);
+      category = category.setIsSelected(!category.isSelected);
+
+      final categories = List<CategoryEntity>.from(currentState.categories);
+      final selectedCategoryIndex = categories.indexWhere((element) => element.id == category.id);
+      if ( !selectedCategoryIndex.isNegative ) {
+        categories[selectedCategoryIndex] = category;
+      }
+
+      return emit(
+        currentState.copyWith(
+          categories: categories,
+        ),
+      );
+
     }
-
-    emit(currentState.copyWith(selectedCategories: selected));
   }
 
   void validateCategoriesSelection() {
     final currentState = state as RegisterCategoriesState;
-    final revenueCategory = currentState.selectedCategories.firstWhere((category) => category.isRevenue, orElse: () => CategoryEntity.empty());
-    final essentialCategory = currentState.selectedCategories.firstWhere((category) => category.isEssentialExpense, orElse: () => CategoryEntity.empty());
+
+    final categories = List<CategoryEntity>.from(currentState.categories);
+
+    final revenueCategory = categories.firstWhere((category) => category.isRevenue && category.isSelected, orElse: () => CategoryEntity.empty());
+    final essentialCategory = categories.firstWhere((category) => category.isEssentialExpense && category.isSelected, orElse: () => CategoryEntity.empty());
 
     if ( revenueCategory.id.trim().isEmpty || essentialCategory.id.trim().isEmpty ) {
       return showError("toast.error.categories");
@@ -186,14 +197,17 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   Future<void> _registerUserCategories() async {
-    final currentState = state as RegisterCategoriesState;
+    final registerCategoriesState = state as RegisterCategoriesState;
     emit(RegisterLoadingState());
 
-    final response = await _categoryUseCase.createUserCategories(currentState.selectedCategories);
+    final selectedCategories = List<CategoryEntity>.from(registerCategoriesState.categories);
+    selectedCategories.retainWhere((category) => category.isSelected);
+
+    final response = await _categoryUseCase.createUserCategories(selectedCategories);
     response.fold(
       (failure) {
         showError(failure.message);
-        emit(RegisterCategoriesState(categories: [], selectedCategories: currentState.selectedCategories));
+        emit(RegisterCategoriesState(categories: registerCategoriesState.categories));
       },
       (categories) async {
         showSuccess("toast.success.categories_created");

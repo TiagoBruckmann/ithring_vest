@@ -43,20 +43,20 @@ class RegisterUserCategoryWidget extends StatelessWidget {
           itemCount: categories.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
             childAspectRatio: 1.0,
           ),
           itemBuilder: (context, index) {
 
             final category = categories[index];
-            final isSelected = state.selectedCategories.contains(category);
-            final borderColor = isSelected ? theme.primaryColor : theme.colorScheme.tertiary.withValues(alpha: 0.3);
-            final bgColor = isSelected ? theme.primaryColor.withValues(alpha:0.08) : theme.scaffoldBackgroundColor;
+            final borderColor = category.isSelected ? theme.primaryColor : theme.colorScheme.tertiary.withValues(alpha: 0.3);
+            final bgColor = category.isSelected ? theme.primaryColor.withValues(alpha:0.08) : theme.scaffoldBackgroundColor;
 
             return GestureDetector(
               onTap: () => cubit.toggleCategorySelection( category ),
               child: Stack(
+                fit: StackFit.expand,
                 children: [
 
                   AnimatedContainer(
@@ -77,7 +77,7 @@ class RegisterUserCategoryWidget extends StatelessWidget {
                           child: Center(
                             child: IconTheme(
                               data: IconThemeData(
-                                color: ( isSelected )
+                                color: ( category.isSelected )
                                   ? theme.scaffoldBackgroundColor
                                   : theme.colorScheme.secondary,
                                 size: 28,
@@ -91,13 +91,13 @@ class RegisterUserCategoryWidget extends StatelessWidget {
 
                         Flexible(
                           child: Text(
-                            category.name,
+                            FlutterI18n.translate(context, category.name),
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: ( isSelected )
-                                ? theme.scaffoldBackgroundColor
+                              color: ( category.isSelected )
+                                ? theme.colorScheme.onPrimary
                                 : theme.colorScheme.onSurface,
                             ),
                           ),
@@ -107,7 +107,7 @@ class RegisterUserCategoryWidget extends StatelessWidget {
                     ),
                   ),
 
-                  if ( isSelected )
+                  if ( category.isSelected )
                     Positioned(
                       top: 6,
                       right: 6,
@@ -118,9 +118,9 @@ class RegisterUserCategoryWidget extends StatelessWidget {
                         ),
                         padding: const EdgeInsets.all(4),
                         child: Icon(
-                          Icons.check_circle_rounded,
+                          Icons.check,
                           size: 14,
-                          color: theme.scaffoldBackgroundColor,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -166,7 +166,7 @@ class RegisterUserCategoryWidget extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () { },
+                onPressed: () => cubit.validateCategoriesSelection(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.primaryColor,
                   padding: const EdgeInsets.symmetric(vertical: 14),

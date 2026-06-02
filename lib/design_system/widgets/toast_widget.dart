@@ -114,7 +114,7 @@ void showSuccess( String message, { int seconds = 4, String? subtitle, Map<Strin
     subtitle: subtitle,
     titleTranslationParams: titleTranslationParams,
     subtitleTranslationParams: subtitleTranslationParams,
-    textColor: Theme.of(Session.globalContext.currentContext!).colorScheme.onPrimary,
+    textColor: Theme.of(Session.globalContext.currentContext!).scaffoldBackgroundColor,
   ).showToastWidget();
 }
 

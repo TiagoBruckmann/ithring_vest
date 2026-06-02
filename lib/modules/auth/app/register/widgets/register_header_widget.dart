@@ -18,7 +18,7 @@ class RegisterHeaderWidget extends StatelessWidget {
       children: [
 
         LinearProgressIndicator(
-          value: 0.25,
+          value: step / 5,
           minHeight: 4,
           backgroundColor:
           theme.colorScheme.tertiary.withValues(alpha: 0.2),

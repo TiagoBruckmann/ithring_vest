@@ -3,6 +3,7 @@ import 'package:ithring_vest/core/data/exceptions/exception.dart';
 import 'package:ithring_vest/core/data/model/category_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ithring_vest/core/domain/enums/step_missing_enum.dart';
 import 'package:ithring_vest/session.dart';
 
 abstract class CategoryDataSource {
@@ -89,7 +90,7 @@ class CategoryDataSourceImpl implements CategoryDataSource {
           for ( int j = i; j < end; j++ ) {
             CategoryModel category = categories[j];
             final DocumentReference docRef = db.collection("categories").doc(date).collection(userId).doc(category.id);
-            batch.set(docRef, category);
+            batch.set(docRef, category.toJson());
           }
 
           await batch.commit();
@@ -104,6 +105,13 @@ class CategoryDataSourceImpl implements CategoryDataSource {
 
       // } while ( qtdMonths < 60 );
       } while ( qtdMonths < 1 );
+
+      if ( Session.user.stepMissing.trim() == StepMissingEnum.categories.name ) {
+        db.collection("users").doc(userId).update({
+          "step_missing": StepMissingEnum.categoriesSelected.name,
+          "updated_at": DateTime.now().toIso8601String(),
+        });
+      }
 
     } on UnauthorizedException {
       rethrow;

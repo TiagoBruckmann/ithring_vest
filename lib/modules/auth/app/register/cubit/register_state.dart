@@ -58,15 +58,13 @@ class RegisterCredentialState extends RegisterState {
 
 class RegisterCategoriesState extends RegisterState {
   final List<CategoryEntity> categories;
-  final List<CategoryEntity> selectedCategories;
-  const RegisterCategoriesState({ required this.categories, this.selectedCategories = const []});
+  const RegisterCategoriesState({ required this.categories });
 
   RegisterCategoriesState copyWith({
-    List<CategoryEntity>? selectedCategories,
+    List<CategoryEntity>? categories,
   }) {
     return RegisterCategoriesState(
-      categories: categories,
-      selectedCategories: selectedCategories ?? this.selectedCategories,
+      categories: categories ?? this.categories,
     );
   }
 
@@ -78,7 +76,6 @@ class RegisterCategoriesState extends RegisterState {
       }
     }
 
-    categories.removeWhere((category) => category.isRevenue);
     return list;
   }
 
@@ -90,19 +87,17 @@ class RegisterCategoriesState extends RegisterState {
       }
     }
 
-    categories.removeWhere((category) => category.isEssentialExpense);
     return list;
   }
 
   List<CategoryEntity> getNonEssentialCategoriesList() {
     final List<CategoryEntity> list = [];
     for ( final category in categories ) {
-      if ( !category.isEssentialExpense ) {
+      if ( !category.isEssentialExpense && !category.isRevenue ) {
         list.add(category);
       }
     }
 
-    categories.removeWhere((category) => !category.isEssentialExpense);
     return list;
   }
 
