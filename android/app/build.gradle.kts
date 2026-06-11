@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -39,6 +40,19 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "androidx.core") {
+            useVersion("1.13.1")
+        }
+
+        if (requested.group == "androidx.browser") {
+            useVersion("1.8.0")
+        }
+    }
+    exclude(group = "com.android.support", module = "support-compat")
 }
 
 dependencies {

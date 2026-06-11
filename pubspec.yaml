@@ -2,10 +2,10 @@ name: ithring_vest
 description: "deixar de ter dor com o dinheiro para alcançar a liberdade financeira."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+5
+version: 1.0.0+6
 
 environment:
-  sdk: ^3.9.0
+  sdk: ">=3.5.0 <4.0.0"
 
 dependencies:
   flutter:
