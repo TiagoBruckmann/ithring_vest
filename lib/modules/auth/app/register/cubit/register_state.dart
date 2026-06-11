@@ -52,6 +52,17 @@ class RegisterCredentialState extends RegisterState {
     );
   }
 
+  void dispose() {
+    nameController.clear();
+    nameController.dispose();
+    emailController.clear();
+    emailController.dispose();
+    passwordController.clear();
+    passwordController.dispose();
+    confirmPasswordController.clear();
+    confirmPasswordController.dispose();
+  }
+
   @override
   List<Object?> get props => [nameController, emailController, passwordController, confirmPasswordController, formKey, coins, defaultCoin, obscurePassword, obscureConfirmPassword];
 }
@@ -101,81 +112,72 @@ class RegisterCategoriesState extends RegisterState {
     return list;
   }
 
+  void dispose() {
+    categories.clear();
+  }
+
   @override
   List<Object?> get props => [categories];
 }
 
 class RegisterCategoriesSelectedState extends RegisterState {
+  final Map<String, MoneyMaskedTextController> controllers;
   final List<CategoryEntity> categories;
-  final List<Map<String, MoneyMaskedTextController>> valueLimitController;
-  final List<Map<String, bool>> isDefaultCoin;
-  final List<Map<String, CoinEntity>> categoriesCoin;
+  final List<CoinEntity> coins;
   const RegisterCategoriesSelectedState({
-    required this.categories,
-    this.valueLimitController = const [],
-    this.isDefaultCoin = const [],
-    this.categoriesCoin = const [],
+    GlobalKey<FormState>? formKey,
+    this.controllers = const {},
+    this.categories = const [],
+    this.coins = const [],
   });
 
+  CoinEntity getDefaultCoin() {
+    return coins.firstWhere((coin) => coin.symbol == Session.user.coinSymbol);
+  }
+
+  MoneyMaskedTextController? getController(String categoryId) {
+    return controllers[categoryId];
+  }
+
   RegisterCategoriesSelectedState copyWith({
+    Map<String, MoneyMaskedTextController>? controllers,
     List<CategoryEntity>? categories,
-    List<Map<String, MoneyMaskedTextController>>? valueLimitController,
-    List<Map<String, bool>>? isDefaultCoin,
-    List<Map<String, CoinEntity>>? categoriesCoin,
+    List<CoinEntity>? coins,
   }) {
     return RegisterCategoriesSelectedState(
+      controllers: controllers ?? this.controllers,
       categories: categories ?? this.categories,
-      valueLimitController: valueLimitController ?? this.valueLimitController,
-      isDefaultCoin: isDefaultCoin ?? this.isDefaultCoin,
-      categoriesCoin: categoriesCoin ?? this.categoriesCoin,
+      coins: coins ?? this.coins,
     );
   }
 
-  List<CategoryEntity> getRevenueCategoriesList() {
-    final List<CategoryEntity> list = [];
+  void dispose() {
     for ( final category in categories ) {
-      if ( category.isRevenue ) {
-        list.add(category);
-      }
+      controllers[category.id]?.clear();
+      controllers[category.id]?.dispose();
     }
 
-    categories.removeWhere((category) => category.isRevenue);
-    return list;
-  }
-
-  List<CategoryEntity> getEssentialCategoriesList() {
-    final List<CategoryEntity> list = [];
-    for ( final category in categories ) {
-      if ( category.isEssentialExpense ) {
-        list.add(category);
-      }
-    }
-
-    categories.removeWhere((category) => category.isEssentialExpense);
-    return list;
-  }
-
-  List<CategoryEntity> getNonEssentialCategoriesList() {
-    final List<CategoryEntity> list = [];
-    for ( final category in categories ) {
-      if ( !category.isEssentialExpense ) {
-        list.add(category);
-      }
-    }
-
-    categories.removeWhere((category) => !category.isEssentialExpense);
-    return list;
+    controllers.clear();
   }
 
   @override
-  List<Object?> get props => [categories];
+  List<Object?> get props => [controllers, categories, coins];
 }
 
 class RegisterAccountsState extends RegisterState {
-  const RegisterAccountsState();
+  final List<TypeAccountEntity> typeAccounts;
+  final List<CoinEntity> coins;
+  const RegisterAccountsState({
+    this.typeAccounts = const [],
+    this.coins = const [],
+  });
+
+  CoinEntity getDefaultCoin() {
+    return coins.firstWhere((coin) => coin.symbol == Session.user.coinSymbol);
+  }
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [typeAccounts, coins];
 }
 
 class RegisterCardState extends RegisterState {

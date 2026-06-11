@@ -23,14 +23,19 @@ class CategoryModel extends CategoryEntity with EquatableMixin {
   }
 
   factory CategoryModel.fromEntity( CategoryEntity entity ) {
+    String id = entity.id;
+    if ( id.trim().isEmpty ) {
+      id = Session.utils.getRandomString(20);
+    }
+
     return CategoryModel(
-      Session.utils.getRandomString(20),
+      id,
       entity.name,
       entity.icon,
       entity.isRevenue,
       entity.isEssentialExpense,
       entity.valueLimit,
-      entity.valueLimit,
+      entity.valueSpent,
       entity.percentage,
       coinSymbol: entity.coinSymbol,
       thousandSeparator: entity.thousandSeparator,

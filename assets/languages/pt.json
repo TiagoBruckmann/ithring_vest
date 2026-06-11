@@ -50,6 +50,20 @@
         "revenue_categories": "Receitas",
         "essential_categories": "Essencias",
         "other_categories": "Outras categorias"
+      },
+      "upd_selected_categories": {
+        "welcome": "Defina seus limites mensais",
+        "subtitle": "Esses limites ajudam você a manter o controle dos seus gastos. Você pode ajustá-los a qualquer momento nas configurações.",
+        "monthly_limit": "Limite mensal",
+        "default_coin": "Moeda principal",
+        "coin": "Moeda"
+      },
+      "register_account": {
+        "welcome": "Vamos criar sua primeira conta",
+        "subtitle": "Essa será sua conta principal para organizar suas finanças.",
+        "account_name": "Nome da conta",
+        "type_account": "Tipo da conta",
+        "coin": "Moeda da conta"
       }
     },
     "categories": {
@@ -73,13 +87,16 @@
   "toast": {
     "error": {
       "invalid_fields_red_validations": "Campos inválidos, verifique as validações em vermelho e tente novamente.",
+      "login_failed": "Falha ao realizar login, tente novamente.",
       "user_register_failed": "Falha ao cadastrar usuário, tente novamente.",
       "categories_not_loaded": "Falha ao carregar categorias, tente novamente.",
+      "default_type_accounts_not_loaded": "Falha ao carregar os tipos de conta, tente novamente.",
       "categories": "Selecione pelo menos uma categoria essencial e uma receita"
     },
     "success": {
       "user_created": "usuário criado com sucesso! Siga as próximas etapas para usar o app.",
-      "categories_created": "Categories principais criadas com sucesso! Siga as próximas etapas para usar o app."
+      "categories_created": "Categories principais criadas com sucesso! Siga as próximas etapas para usar o app.",
+      "categories_updated": "Categorias atualizadas com sucesso! Siga as próximas etapas para usar o app."
     }
   },
   "fields": {
@@ -95,6 +112,9 @@
       "confirm_password": "Confirmação da senha",
       "label": "Senha",
       "hint": "Digite sua senha"
+    },
+    "value_limit_category": {
+      "label": "Valor limite da categoria"
     }
   },
   "validations": {
@@ -102,6 +122,7 @@
       "field": "O campo {field} é obrigatório."
     },
     "invalid": {
+      "user": "E-mail ou senha inválidos",
       "min_length": "O campo {field} deve conter no mínimo {min} caracteres.",
       "max_length": "O campo {field} deve conter no máximo {min} caracteres.",
       "name": "O nome deve conter apenas letras e espaços, e deve ter entre 3 e 50 caracteres.",
@@ -109,7 +130,8 @@
       "email_already_in_use": "O e-mail fornecido já está em uso por outra conta.",
       "password": "A senha não corresponde ao exigido",
       "confirm_password": "Certifique-se que as senhas informadas são idênticas",
-      "email_max_500_characters": "O e-mail excede o tamanho esperado!"
+      "email_max_500_characters": "O e-mail excede o tamanho esperado!",
+      "value_limit_category": "O valor do limite da categoria deve ser maior que 0."
     }
   },
   "coins": {
@@ -138,6 +160,13 @@
     "crypto": "Criptomoedas",
     "emergency_reserve": "Reserva de Emergência",
     "retirement": "Aposentadoria"
+  },
+  "default_type_account": {
+    "checking_account": "Conta Corrente",
+    "savings": "Poupança",
+    "cash": "Dinheiro",
+    "international": "Conta internacional",
+    "investments": "Investimentos"
   },
   "default_categories": {
     "house": "Moradia",

@@ -1,14 +1,16 @@
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:ithring_vest/session.dart';
 
 class FieldsFormatter {
 
-  /*
-  MaskedTextController fullPhone({ String value = "" }) {
-    return MaskedTextController(
-      mask: "+00 (00) 00000-0000",
-      text: value,
+  MoneyMaskedTextController moneyController( double value, { String? leftSymbol, String? thousandSeparator, String? decimalSeparator }) {
+    return MoneyMaskedTextController(
+      leftSymbol: leftSymbol ?? "${Session.user.coinSymbol} ",
+      initialValue: value,
+      thousandSeparator: thousandSeparator ?? Session.user.thousandSeparator,
+      decimalSeparator: decimalSeparator ?? Session.user.decimalSeparator,
+      precision: 2,
     );
   }
-  */
 
 }

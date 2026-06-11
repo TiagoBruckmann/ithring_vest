@@ -8,7 +8,7 @@ import 'package:ithring_vest/session.dart';
 abstract class AuthDataSource {
   Future<UserModel> verifyConnection();
   Future<UserModel> registerUserWithEmail( UserModel user, String password );
-  Future<UserModel> loginWithEmail( Map<String, dynamic> params );
+  Future<UserModel> loginWithEmail( String email, String password );
   Future<UserModel> google();
   Future<void> forgotPassword( String email );
 }
@@ -29,14 +29,9 @@ class AuthDataSourceImpl implements AuthDataSource {
         throw UnauthorizedException(message);
       }
 
-      final response = await db.collection("users").doc(user.uid).get();
-      if ( !response.exists ) {
-        String message = "Não foi possível encontrar o usuário";
-        Session.crash.onError("UserNotFound => ", error: message);
-        throw UnauthorizedException(message);
-      }
-
-      return UserModel.fromJson(response.data()!);
+      return await _getUserData(user.uid);
+    } on UnauthorizedException {
+      rethrow;
     } catch (e) {
       Session.crash.onError("VerifyConnectionError => ", error: e.toString());
       throw GeneralException(e.toString());
@@ -45,10 +40,8 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<UserModel> registerUserWithEmail( UserModel user, String password ) async {
-    UserCredential? firebaseUserCredential;
-
     try {
-      firebaseUserCredential = await auth.createUserWithEmailAndPassword(
+      final firebaseUserCredential = await auth.createUserWithEmailAndPassword(
         email: user.email,
         password: password,
       );
@@ -76,9 +69,28 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<UserModel> loginWithEmail(Map<String, dynamic> params) {
-    // TODO: implement loginWithEmail
-    throw UnimplementedError();
+  Future<UserModel> loginWithEmail( String email, String password ) async {
+    try {
+      final firebaseUserCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
+
+      final firebaseUser = firebaseUserCredential.user;
+      if ( firebaseUser == null ) {
+        Session.crash.onError("loginWithEmail", error: "Falha ao logar: $email");
+        throw ServerExceptions("toast.error.login_failed");
+      }
+
+      return await _getUserData(firebaseUser.uid);
+
+    } on UnauthorizedException {
+      rethrow;
+    } on ServerExceptions {
+      rethrow;
+    } on FirebaseAuthException catch (e, st) {
+      throw _mapAuthException(e, st);
+    } catch (e, st) {
+      Session.crash.onError("registerUserWithEmail_catch", error: e, stackTrace: st);
+      throw GeneralException("toast.error.user_register_failed");
+    }
   }
 
   @override
@@ -93,6 +105,17 @@ class AuthDataSourceImpl implements AuthDataSource {
     throw UnimplementedError();
   }
 
+  Future<UserModel> _getUserData( String userId ) async {
+    final response = await db.collection("users").doc(userId).get();
+    if ( !response.exists ) {
+      String message = "Não foi possível encontrar o usuário";
+      Session.crash.onError("UserNotFound => ", error: message);
+      throw UnauthorizedException(message);
+    }
+
+    return UserModel.fromJson(response.data()!);
+  }
+
   Exception _mapAuthException( FirebaseAuthException e, StackTrace st ) {
     Session.crash.onError("_mapAuthException code: ${e.code}", error: e, stackTrace: st);
 
@@ -103,6 +126,8 @@ class AuthDataSourceImpl implements AuthDataSource {
         return EmailUsedException("validations.invalid.email_already_in_use");
       case "invalid-email":
         return InvalidEmailException("validations.invalid.email");
+      case "invalid-credential":
+        return UserNotFoundException("validations.invalid.user");
       default:
         return ServerExceptions(e.message ?? e.code);
     }

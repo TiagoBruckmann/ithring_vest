@@ -11,6 +11,7 @@ abstract class CategoryDataSource {
   Future<List<CategoryModel>> getUserCategories();
   Future<void> createUserCategories( List<CategoryModel> categories );
   Future<void> createUserCategory( Map<String, dynamic> json );
+  Future<void> updateUserCategories( List<CategoryModel> categories );
   Future<void> updateUserCategory( Map<String, dynamic> json );
 }
 
@@ -128,6 +129,18 @@ class CategoryDataSourceImpl implements CategoryDataSource {
   Future<void> createUserCategory( Map<String, dynamic> json ) async {
     try {
       final userId = _validateUser();
+
+      final dateNow = DateTime.now();
+      int year = dateNow.year;
+      int month = dateNow.month;
+
+      String date = "$year-${Session.utils.parseNumberLessThan10(month)}";
+
+      final WriteBatch batch = db.batch();
+      final DocumentReference docRef = db.collection("categories").doc(date).collection(userId).doc(json["id"]);
+      batch.set(docRef, json);
+      await batch.commit();
+
     } on UnauthorizedException {
       rethrow;
     } on FirebaseException catch (e, st) {
@@ -140,9 +153,79 @@ class CategoryDataSourceImpl implements CategoryDataSource {
   }
 
   @override
+  Future<void> updateUserCategories( List<CategoryModel> categories ) async {
+    try {
+      final userId = _validateUser();
+
+      const int batchLimit = 500;
+
+      final dateNow = DateTime.now();
+      int year = dateNow.year;
+      int month = dateNow.month;
+
+      String date = "$year-${Session.utils.parseNumberLessThan10(month)}";
+      int qtdMonths = 0;
+
+      // Cadastra para os próximos 5 anos (60 vezes).
+      do {
+
+        for ( int i = 0; i < categories.length; i += batchLimit ) {
+          final end = (i + batchLimit < categories.length) ? i + batchLimit : categories.length;
+          final WriteBatch batch = db.batch();
+
+          for ( int j = i; j < end; j++ ) {
+            CategoryModel category = categories[j];
+            print("category => ${category.id}");
+            final DocumentReference docRef = db.collection("categories").doc(date).collection(userId).doc(category.id);
+            batch.update(docRef, category.updateJson());
+          }
+
+          await batch.commit();
+        }
+
+        qtdMonths++;
+        if ( month > 12 ) {
+          year++;
+          month = 1;
+        }
+        date = "$year-${Session.utils.parseNumberLessThan10(month)}";
+
+        // } while ( qtdMonths < 60 );
+      } while ( qtdMonths < 1 );
+
+      if ( Session.user.stepMissing.trim() == StepMissingEnum.categoriesSelected.name ) {
+        db.collection("users").doc(userId).update({
+          "step_missing": StepMissingEnum.accounts.name,
+          "updated_at": DateTime.now().toIso8601String(),
+        });
+      }
+
+    } on UnauthorizedException {
+      rethrow;
+    } on FirebaseException catch (e, st) {
+      Session.crash.onError("updateUserCategories_FirebaseException", error: e, stackTrace: st);
+      throw ServerExceptions(e.message ?? e.toString());
+    } catch (e, st) {
+      Session.crash.onError("updateUserCategories_error", error: e, stackTrace: st);
+      throw GeneralException(e.toString());
+    }
+  }
+
+  @override
   Future<void> updateUserCategory( Map<String, dynamic> json ) async {
     try {
       final userId = _validateUser();
+      final dateNow = DateTime.now();
+      int year = dateNow.year;
+      int month = dateNow.month;
+
+      String date = "$year-${Session.utils.parseNumberLessThan10(month)}";
+
+      final WriteBatch batch = db.batch();
+      final DocumentReference docRef = db.collection("categories").doc(date).collection(userId).doc(json["id"]);
+      batch.update(docRef, json);
+      await batch.commit();
+
     } on UnauthorizedException {
       rethrow;
     } on FirebaseException catch (e, st) {

@@ -25,8 +25,12 @@ class CategoryUseCase {
     return await _repo.createUserCategory(category.toJson());
   }
 
+  Future<Either<Failure, void>> updateUserCategories( List<CategoryEntity> categories ) async {
+    return await _repo.updateUserCategories(categories);
+  }
+
   Future<Either<Failure, void>> updateUserCategory( CategoryEntity category ) async {
-    return await _repo.createUserCategory(category.toJson());
+    return await _repo.updateUserCategory(category.toJson());
   }
 
 }

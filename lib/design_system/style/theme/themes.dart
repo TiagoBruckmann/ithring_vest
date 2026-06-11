@@ -139,6 +139,7 @@ class Themes {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColorsDark.secondaryBackground,
+      errorMaxLines: 2,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 18,
         vertical: 18,

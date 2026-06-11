@@ -24,26 +24,21 @@ mixin _$UserMobx on _UserMobx, Store {
     });
   }
 
-  late final _$exitAppAsyncAction = AsyncAction(
-    '_UserMobx.exitApp',
-    context: context,
-  );
+  late final _$exitAppAsyncAction =
+      AsyncAction('_UserMobx.exitApp', context: context);
 
   @override
   Future<void> exitApp() {
     return _$exitAppAsyncAction.run(() => super.exitApp());
   }
 
-  late final _$_UserMobxActionController = ActionController(
-    name: '_UserMobx',
-    context: context,
-  );
+  late final _$_UserMobxActionController =
+      ActionController(name: '_UserMobx', context: context);
 
   @override
   void setUser(UserEntity newUser) {
-    final _$actionInfo = _$_UserMobxActionController.startAction(
-      name: '_UserMobx.setUser',
-    );
+    final _$actionInfo =
+        _$_UserMobxActionController.startAction(name: '_UserMobx.setUser');
     try {
       return super.setUser(newUser);
     } finally {

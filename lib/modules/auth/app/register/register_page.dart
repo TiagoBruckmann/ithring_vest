@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ithring_vest/core/domain/source/local/injection/injection.dart';
 import 'package:ithring_vest/design_system/widgets/verify_connection_widget.dart';
 import 'package:ithring_vest/modules/auth/app/register/cubit/register_cubit.dart';
+import 'package:ithring_vest/modules/auth/app/register/widgets/register_account_widget.dart';
+import 'package:ithring_vest/modules/auth/app/register/widgets/register_upd_selected_category_widget.dart';
 import 'package:ithring_vest/modules/auth/app/register/widgets/register_user_category_widget.dart';
 import 'package:ithring_vest/modules/auth/app/register/widgets/register_user_widget.dart';
 
@@ -25,9 +27,12 @@ class RegisterPage extends StatelessWidget {
             ? RegisterUserWidget(cubit: cubit, state: state)
             : ( state is RegisterCategoriesState )
             ? RegisterUserCategoryWidget(cubit: cubit, state: state)
+            : ( state is RegisterCategoriesSelectedState )
+            ? RegisterUpdSelectedCategoryWidget(cubit: cubit, state: state)
             : ( state is RegisterAccountsState )
-            ? Container()
+            ? RegisterAccountWidget(cubit: cubit, state: state)
             : Container(),
+
           );
         },
       ),

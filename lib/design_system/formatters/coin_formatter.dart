@@ -9,7 +9,6 @@ class CoinFormatter {
       initialValue: value,
       thousandSeparator: Session.user.thousandSeparator,
       decimalSeparator: Session.user.decimalSeparator,
-      rightSymbol: "%",
       precision: 2,
     ).text;
   }
@@ -18,6 +17,7 @@ class CoinFormatter {
     return MoneyMaskedTextController(
       initialValue: value,
       thousandSeparator: ".",
+      rightSymbol: "%",
       precision: 2,
     ).text;
   }
@@ -25,9 +25,9 @@ class CoinFormatter {
   double coinToDouble( String value ) {
     String cleanValue;
     if ( value.contains(",") ) {
-      cleanValue = value.replaceAll(RegExp(r'[^\d,]'), '').replaceAll(",", ".");
+      cleanValue = value.replaceAll(RegExp(r'[^\d,]'), "").replaceAll(",", ".");
     } else {
-      cleanValue = value.replaceAll(RegExp(r'[^\d.]'), '');
+      cleanValue = value.replaceAll(RegExp(r'[^\d.]'), "");
     }
     return double.tryParse(cleanValue) ?? 0.0;
   }

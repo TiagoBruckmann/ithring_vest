@@ -9,10 +9,8 @@ part of 'connection_mobx.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ConnectionMobx on _ConnectionMobx, Store {
-  late final _$connectionStatusAtom = Atom(
-    name: '_ConnectionMobx.connectionStatus',
-    context: context,
-  );
+  late final _$connectionStatusAtom =
+      Atom(name: '_ConnectionMobx.connectionStatus', context: context);
 
   @override
   ConnectivityResult get connectionStatus {
@@ -27,10 +25,8 @@ mixin _$ConnectionMobx on _ConnectionMobx, Store {
     });
   }
 
-  late final _$_connectivityAtom = Atom(
-    name: '_ConnectionMobx._connectivity',
-    context: context,
-  );
+  late final _$_connectivityAtom =
+      Atom(name: '_ConnectionMobx._connectivity', context: context);
 
   @override
   Connectivity get _connectivity {
@@ -45,10 +41,8 @@ mixin _$ConnectionMobx on _ConnectionMobx, Store {
     });
   }
 
-  late final _$isValidConnectionAtom = Atom(
-    name: '_ConnectionMobx.isValidConnection',
-    context: context,
-  );
+  late final _$isValidConnectionAtom =
+      Atom(name: '_ConnectionMobx.isValidConnection', context: context);
 
   @override
   bool get isValidConnection {
@@ -63,10 +57,8 @@ mixin _$ConnectionMobx on _ConnectionMobx, Store {
     });
   }
 
-  late final _$_subscriptionAtom = Atom(
-    name: '_ConnectionMobx._subscription',
-    context: context,
-  );
+  late final _$_subscriptionAtom =
+      Atom(name: '_ConnectionMobx._subscription', context: context);
 
   @override
   StreamSubscription<List<ConnectivityResult>>? get _subscription {
@@ -81,38 +73,30 @@ mixin _$ConnectionMobx on _ConnectionMobx, Store {
     });
   }
 
-  late final _$_verifyConnectionAsyncAction = AsyncAction(
-    '_ConnectionMobx._verifyConnection',
-    context: context,
-  );
+  late final _$_verifyConnectionAsyncAction =
+      AsyncAction('_ConnectionMobx._verifyConnection', context: context);
 
   @override
   Future<void> _verifyConnection() {
     return _$_verifyConnectionAsyncAction.run(() => super._verifyConnection());
   }
 
-  late final _$_updateConnectionStatusAsyncAction = AsyncAction(
-    '_ConnectionMobx._updateConnectionStatus',
-    context: context,
-  );
+  late final _$_updateConnectionStatusAsyncAction =
+      AsyncAction('_ConnectionMobx._updateConnectionStatus', context: context);
 
   @override
   Future<void> _updateConnectionStatus(ConnectivityResult result) {
-    return _$_updateConnectionStatusAsyncAction.run(
-      () => super._updateConnectionStatus(result),
-    );
+    return _$_updateConnectionStatusAsyncAction
+        .run(() => super._updateConnectionStatus(result));
   }
 
-  late final _$_ConnectionMobxActionController = ActionController(
-    name: '_ConnectionMobx',
-    context: context,
-  );
+  late final _$_ConnectionMobxActionController =
+      ActionController(name: '_ConnectionMobx', context: context);
 
   @override
   void _setIsValidConnection(bool value) {
     final _$actionInfo = _$_ConnectionMobxActionController.startAction(
-      name: '_ConnectionMobx._setIsValidConnection',
-    );
+        name: '_ConnectionMobx._setIsValidConnection');
     try {
       return super._setIsValidConnection(value);
     } finally {
@@ -123,8 +107,7 @@ mixin _$ConnectionMobx on _ConnectionMobx, Store {
   @override
   void listenChangeConnectivityState() {
     final _$actionInfo = _$_ConnectionMobxActionController.startAction(
-      name: '_ConnectionMobx.listenChangeConnectivityState',
-    );
+        name: '_ConnectionMobx.listenChangeConnectivityState');
     try {
       return super.listenChangeConnectivityState();
     } finally {
@@ -135,8 +118,7 @@ mixin _$ConnectionMobx on _ConnectionMobx, Store {
   @override
   void cancelListen() {
     final _$actionInfo = _$_ConnectionMobxActionController.startAction(
-      name: '_ConnectionMobx.cancelListen',
-    );
+        name: '_ConnectionMobx.cancelListen');
     try {
       return super.cancelListen();
     } finally {

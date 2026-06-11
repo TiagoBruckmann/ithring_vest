@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           final cubit = BlocProvider.of<LoginCubit>(builder);
           final obscurePassword = (state is LoginInitialState) ? state.obscurePassword : true;
           final rememberMe = (state is LoginInitialState) ? state.rememberMe : true;
+          final String? error = (state is LoginInitialState) ? state.error : null;
 
           return VerifyConnectionWidget(
             isLoading: state is LoginLoadingState,
@@ -69,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                       controller: cubit.emailController,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) => Session.fieldsValidation.validateEmail(value ?? ""),
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: FlutterI18n.translate(context, "fields.email.label"),
                         hintText: FlutterI18n.translate(context, "fields.email.hint"),
@@ -106,6 +108,19 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       style: theme.textTheme.bodyLarge,
+                    ),
+
+                    Visibility(
+                      visible: error != null,
+                      child: Padding(
+                        padding: EdgeInsets.only( top: 16 ),
+                        child: Text(
+                          FlutterI18n.translate(context, error ?? ""),
+                          style: theme.textTheme.labelMedium!.apply(
+                            color: theme.colorScheme.error,
+                          ),
+                        ),
+                      ),
                     ),
 
                     const SizedBox(height: 16),

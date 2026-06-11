@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ithring_vest/core/domain/entities/category_entity.dart';
 import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
+import 'package:ithring_vest/core/domain/entities/type_account_entity.dart';
 import 'package:ithring_vest/core/domain/entities/user_entity.dart';
 import 'package:ithring_vest/core/domain/enums/step_missing_enum.dart';
 import 'package:ithring_vest/core/domain/usecases/auth_use_case.dart';
@@ -28,6 +29,8 @@ class RegisterCubit extends Cubit<RegisterState> {
     _getInitialData();
   }
 
+  final List<CoinEntity> coins = [];
+
   Future<void> _getInitialData() async {
     emit(RegisterLoadingState());
 
@@ -36,10 +39,21 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
 
     if ( Session.user.stepMissing == StepMissingEnum.categoriesSelected.name ) {
-      return await _getUserCategories();
+      await Future.wait([
+        _getCoins(isCredentialState: false),
+        _getUserCategories(),
+      ]);
+
+      return;
     }
 
     if ( Session.user.stepMissing == StepMissingEnum.accounts.name ) {
+      await Future.wait([
+        _getCoins(isCredentialState: false),
+        _getDefaultTypeAccounts(),
+      ]);
+
+      return;
       return emit(RegisterAccountsState());
     }
 
@@ -50,24 +64,33 @@ class RegisterCubit extends Cubit<RegisterState> {
     await _getCoins();
   }
 
-  Future<void> _getCoins() async {
+  Future<void> _getCoins({ bool isCredentialState = true }) async {
     final result = await _coinUseCase.getCoins();
     result.fold(
       (failure) {
+        coins.add(CoinEntity.defaultBrl());
+
+        if ( !isCredentialState ) return;
+
         return emit(
           RegisterCredentialState(
-            coins: [CoinEntity.defaultBrl()],
-            defaultCoin: CoinEntity.defaultBrl(),
+            coins: coins,
+            defaultCoin: coins.first,
           ),
         );
       },
       (coins) {
+        this.coins.addAll(coins);
+
+        if ( !isCredentialState ) return;
+
         return emit(
           RegisterCredentialState(
             coins: coins,
             defaultCoin: CoinEntity.defaultBrl(),
           ),
         );
+
       },
     );
   }
@@ -90,16 +113,63 @@ class RegisterCubit extends Cubit<RegisterState> {
         showError("toast.error.categories_not_loaded");
         return emit(RegisterCategoriesState(categories: []));
       },
-      (categories) => emit(RegisterCategoriesSelectedState(categories: categories)),
+      (categories) {
+        return emit(
+          RegisterCategoriesSelectedState(
+            controllers: _manageCategoriesController(categories),
+            categories: categories,
+            coins: coins,
+          ),
+        );
+      }
     );
   }
 
-  void selectCoin( CoinEntity coin ) {
+  Future<void> _getDefaultTypeAccounts() async {
+    /// TODO: TROCAR O USE CASE
+    final result = await _categoryUseCase.getDefaultTypeAccounts();
+    result.fold(
+      ( failure ) {
+        showError("toast.error.default_type_accounts_not_loaded");
+        return emit(
+          RegisterAccountsState(coins: coins),
+        );
+      },
+      ( typeAccounts ) {
+        return emit(
+          RegisterAccountsState(
+            typeAccounts: typeAccounts,
+            coins: coins,
+          ),
+        );
+      }
+    );
+  }
+
+  void selectCoin( CoinEntity coin, { CategoryEntity? category }) {
     final currentState = state;
     if ( currentState is RegisterCredentialState ) {
       return emit(
         currentState.copyWith(
           defaultCoin: coin,
+        ),
+      );
+    }
+
+    if ( currentState is RegisterCategoriesSelectedState && category != null ) {
+
+      category = category.copyWith(coin: coin);
+      final categories = List<CategoryEntity>.from(currentState.categories);
+
+      final index = categories.indexWhere((item) => item.id == category!.id);
+      if ( !index.isNegative ) {
+        categories[index] = category;
+      }
+
+      return emit(
+        currentState.copyWith(
+          controllers: _manageCategoriesController(categories),
+          categories: categories,
         ),
       );
     }
@@ -153,6 +223,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(RegisterCredentialState());
       },
       (user) async {
+        currentState.dispose();
         showSuccess("toast.success.user_created");
         return await _getDefaultCategories();
       },
@@ -164,7 +235,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     final currentState = state;
     if ( currentState is RegisterCategoriesState ) {
 
-      category = category.setIsSelected(!category.isSelected);
+      category = category.copyWith(isSelected: !category.isSelected);
 
       final categories = List<CategoryEntity>.from(currentState.categories);
       final selectedCategoryIndex = categories.indexWhere((element) => element.id == category.id);
@@ -211,12 +282,112 @@ class RegisterCubit extends Cubit<RegisterState> {
       },
       (categories) async {
         showSuccess("toast.success.categories_created");
-        return emit(
-          RegisterCategoriesSelectedState(categories: categories),
+        emit(
+          RegisterCategoriesSelectedState(
+            categories: categories,
+            coins: coins,
+          ),
         );
+
+        return registerCategoriesState.dispose();
       },
     );
 
+  }
+
+  void toggleDefaultCoinUpdSelectedCategory( CategoryEntity category ) {
+    final currentState = state;
+    if ( currentState is RegisterCategoriesSelectedState ) {
+
+      category = category.copyWith(isDefaultCoin: !category.isDefaultCoin, coin: currentState.getDefaultCoin());
+
+      final categories = List<CategoryEntity>.from(currentState.categories);
+      final selectedCategoryIndex = categories.indexWhere((element) => element.id == category.id);
+      if ( !selectedCategoryIndex.isNegative ) {
+        categories[selectedCategoryIndex] = category;
+      }
+
+      return emit(
+        currentState.copyWith(
+          controllers: _manageCategoriesController(categories),
+          categories: categories,
+        ),
+      );
+
+    }
+  }
+
+  void updateValueLimitCategory( String categoryId, String newValueLimit ) {
+    final currentState = state;
+    if ( currentState is RegisterCategoriesSelectedState ) {
+
+      final parsedNewValueLimit = Session.coinFormatter.coinToDouble(newValueLimit);
+
+      final updatedCategories = currentState.categories.map((category) {
+        if ( category.id == categoryId ) {
+          category = category.copyWith(valueLimit: parsedNewValueLimit);
+        }
+        return category;
+      }).toList();
+
+      emit(
+        currentState.copyWith(
+          categories: updatedCategories,
+        ),
+      );
+
+    }
+  }
+
+  Map<String, MoneyMaskedTextController> _manageCategoriesController( List<CategoryEntity> categories ) {
+    final Map<String, MoneyMaskedTextController> controllers = {};
+
+    for ( final category in categories ) {
+      controllers[category.id] = Session.fieldsFormatter.moneyController(
+        category.valueLimit,
+        leftSymbol: category.coinSymbol.trim().isEmpty ? null : "${category.coinSymbol} ",
+        thousandSeparator: category.thousandSeparator.trim().isEmpty ? null : category.thousandSeparator,
+        decimalSeparator: category.decimalSeparator.trim().isEmpty ? null : category.decimalSeparator,
+      );
+    }
+
+    return controllers;
+  }
+
+  void validateUpdSelectedCategories() {
+    if ( !Session.formKey.currentState!.validate() ) {
+      return showError("toast.error.invalid_fields_red_validations");
+    }
+
+    _updSelectedCategories();
+  }
+
+  Future<void> _updSelectedCategories() async {
+    final currentState = state as RegisterCategoriesSelectedState;
+    emit(RegisterLoadingState());
+
+    final response = await _categoryUseCase.updateUserCategories(currentState.categories);
+    response.fold(
+      (failure) {
+        showError(failure.message);
+        emit(
+          RegisterCategoriesSelectedState(
+            controllers: currentState.controllers,
+            categories: currentState.categories,
+            coins: currentState.coins,
+          ),
+        );
+      },
+      (success) {
+        currentState.dispose();
+        showSuccess("toast.success.categories_updated");
+        return emit(
+          RegisterAccountsState(
+            coins: coins,
+          ),
+        );
+      },
+    );
   }
 
   @override

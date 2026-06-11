@@ -15,6 +15,7 @@ import 'package:ithring_vest/design_system/formatters/fields_formatter.dart';
 class Session {
 
   static final globalContext = GlobalKey<NavigatorState>();
+  static final formKey = GlobalKey<FormState>();
 
   static final FieldsValidationUtils fieldsValidation = FieldsValidationUtils();
   static final FieldsFormatter fieldsFormatter = FieldsFormatter();

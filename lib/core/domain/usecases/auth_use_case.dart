@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:ithring_vest/core/data/repositories/auth_repo.dart';
 import 'package:ithring_vest/core/domain/entities/user_entity.dart';
 import 'package:ithring_vest/core/domain/failures/failure.dart';
+import 'package:ithring_vest/session.dart';
 
 @injectable
 class AuthUseCase {
@@ -17,13 +18,14 @@ class AuthUseCase {
     return await _repo.registerUserWithEmail(user, password);
   }
 
-  Future<Either<Failure, UserEntity>> loginWithEmail( String email, String password ) async {
-    final Map<String, String> params = {
-      "email": email,
-      "password": password,
-    };
+  Future<Either<Failure, UserEntity>> loginWithEmail( String email, String password, bool isRememberMe ) async {
+    Session.localStorage.saveRememberLogin(isRememberMe);
+    if ( isRememberMe ) {
+      Session.localStorage.saveLoginEmail(email);
+      Session.localStorage.saveLoginPassword(password);
+    }
 
-    return await _repo.loginWithEmail(params);
+    return await _repo.loginWithEmail(email, password);
   }
 
   Future<Either<Failure, UserEntity>> google() async {

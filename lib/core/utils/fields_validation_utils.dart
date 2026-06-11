@@ -115,6 +115,23 @@ class FieldsValidationUtils {
     return null;
   }
 
+  String? validateValueLimitCategory( String value ) {
+    value = value.trim();
+
+    if ( value.isEmpty ) {
+      return _translateErrorMessage("validations.required.field", params: {
+        "field": _translateErrorMessage("fields.value_limit_category.label"),
+      });
+    }
+
+    final numberValue = Session.coinFormatter.coinToDouble(value);
+    if ( numberValue <= 0 ) {
+      return _translateErrorMessage("validations.invalid.value_limit_category");
+    }
+
+    return null;
+  }
+
   String _translateErrorMessage( String errorMessage, { Map<String, String>? params }) {
     return FlutterI18n.translate(Session.globalContext.currentContext!, errorMessage, translationParams: params);
   }

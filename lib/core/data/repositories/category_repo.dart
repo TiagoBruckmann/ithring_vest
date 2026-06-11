@@ -10,6 +10,7 @@ abstract class CategoryRepo {
   Future<Either<Failure, List<CategoryEntity>>> getDefaultCategories();
   Future<Either<Failure, List<CategoryEntity>>> getUserCategories();
   Future<Either<Failure, List<CategoryEntity>>> createUserCategories( List<CategoryEntity> categories );
+  Future<Either<Failure, void>> updateUserCategories( List<CategoryEntity> categories );
   Future<Either<Failure, void>> createUserCategory( Map<String, dynamic> json );
   Future<Either<Failure, void>> updateUserCategory( Map<String, dynamic> json );
 }
@@ -75,6 +76,21 @@ class CategoryRepoImpl implements CategoryRepo {
   }
 
   @override
+  Future<Either<Failure, void>> updateUserCategories( List<CategoryEntity> categories ) async {
+    try {
+      final List<CategoryModel> list = categories.map((category) => CategoryModel.fromEntity(category)).toList();
+      final result = await _dataSource.updateUserCategories(list);
+      return right(result);
+    } on UnauthorizedException catch (e) {
+      return left(UnauthorizedFailure(e.message));
+    } on ServerExceptions catch (e) {
+      return left(ServerFailure(e.message));
+    } catch (e) {
+      return left(GeneralFailure(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> updateUserCategory( Map<String, dynamic> json ) async {
     try {
       final result = await _dataSource.updateUserCategory(json);
@@ -87,6 +103,5 @@ class CategoryRepoImpl implements CategoryRepo {
       return left(GeneralFailure(e.toString()));
     }
   }
-
 
 }

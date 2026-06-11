@@ -42,62 +42,53 @@ import 'package:ithring_vest/modules/auth/app/splash/cubit/splash_cubit.dart'
     as _i814;
 
 extension GetItInjectableX on _i174.GetIt {
-  // initializes the registration of main-scope dependencies inside of GetIt
+// initializes the registration of main-scope dependencies inside of GetIt
   _i174.GetIt init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
   }) {
-    final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    final gh = _i526.GetItHelper(
+      this,
+      environment,
+      environmentFilter,
+    );
     final externalModule = _$ExternalModule();
-    gh.factory<_i1023.LoginCubit>(() => _i1023.LoginCubit());
     gh.singleton<_i311.ConnectionMobx>(() => _i311.ConnectionMobx());
     gh.lazySingleton<_i974.FirebaseFirestore>(() => externalModule.firestore);
     gh.lazySingleton<_i59.FirebaseAuth>(() => externalModule.firebaseAuth);
     gh.lazySingleton<_i519.Client>(() => externalModule.httpClient);
     gh.lazySingleton<_i477.UserMobx>(() => _i477.UserMobx());
-    gh.factory<_i975.AuthDataSource>(
-      () => _i975.AuthDataSourceImpl(
-        gh<_i974.FirebaseFirestore>(),
-        gh<_i59.FirebaseAuth>(),
-      ),
-    );
-    gh.factory<_i830.CategoryDataSource>(
-      () => _i830.CategoryDataSourceImpl(
-        gh<_i974.FirebaseFirestore>(),
-        gh<_i59.FirebaseAuth>(),
-      ),
-    );
+    gh.factory<_i975.AuthDataSource>(() => _i975.AuthDataSourceImpl(
+          gh<_i974.FirebaseFirestore>(),
+          gh<_i59.FirebaseAuth>(),
+        ));
+    gh.factory<_i830.CategoryDataSource>(() => _i830.CategoryDataSourceImpl(
+          gh<_i974.FirebaseFirestore>(),
+          gh<_i59.FirebaseAuth>(),
+        ));
     gh.factory<_i471.AuthRepo>(
-      () => _i471.AuthRepoImpl(gh<_i975.AuthDataSource>()),
-    );
+        () => _i471.AuthRepoImpl(gh<_i975.AuthDataSource>()));
     gh.factory<_i363.CoinDataSource>(
-      () => _i363.CoinDataSourceImpl(gh<_i974.FirebaseFirestore>()),
-    );
+        () => _i363.CoinDataSourceImpl(gh<_i974.FirebaseFirestore>()));
     gh.factory<_i812.CoinRepo>(
-      () => _i812.CoinRepoImpl(gh<_i363.CoinDataSource>()),
-    );
+        () => _i812.CoinRepoImpl(gh<_i363.CoinDataSource>()));
     gh.factory<_i618.AuthUseCase>(
-      () => _i618.AuthUseCase(gh<_i471.AuthRepo>()),
-    );
+        () => _i618.AuthUseCase(gh<_i471.AuthRepo>()));
     gh.factory<_i476.CategoryRepo>(
-      () => _i476.CategoryRepoImpl(gh<_i830.CategoryDataSource>()),
-    );
+        () => _i476.CategoryRepoImpl(gh<_i830.CategoryDataSource>()));
     gh.factory<_i999.CategoryUseCase>(
-      () => _i999.CategoryUseCase(gh<_i476.CategoryRepo>()),
-    );
+        () => _i999.CategoryUseCase(gh<_i476.CategoryRepo>()));
+    gh.factory<_i1023.LoginCubit>(
+        () => _i1023.LoginCubit(gh<_i618.AuthUseCase>()));
     gh.factory<_i814.SplashCubit>(
-      () => _i814.SplashCubit(gh<_i618.AuthUseCase>()),
-    );
+        () => _i814.SplashCubit(gh<_i618.AuthUseCase>()));
     gh.factory<_i912.CoinUseCase>(
-      () => _i912.CoinUseCase(gh<_i812.CoinRepo>()),
-    );
-    gh.factory<_i706.RegisterCubit>(
-      () => _i706.RegisterCubit(
-        gh<_i999.CategoryUseCase>(),
-        gh<_i618.AuthUseCase>(),
-        gh<_i912.CoinUseCase>(),
-      ),
-    );
+        () => _i912.CoinUseCase(gh<_i812.CoinRepo>()));
+    gh.factory<_i706.RegisterCubit>(() => _i706.RegisterCubit(
+          gh<_i999.CategoryUseCase>(),
+          gh<_i618.AuthUseCase>(),
+          gh<_i912.CoinUseCase>(),
+        ));
     return this;
   }
 }

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
+import 'package:ithring_vest/session.dart';
 
 class CategoryEntity extends Equatable {
 
@@ -7,6 +9,8 @@ class CategoryEntity extends Equatable {
   final Icon icon;
   final double valueLimit, valueSpent, percentage;
   final bool isEssentialExpense, isRevenue, isSelected;
+  final bool isDefaultCoin;
+  final String? coinAcronym;
 
   const CategoryEntity(
     this.id, this.name, this.icon, this.isRevenue,
@@ -14,25 +18,33 @@ class CategoryEntity extends Equatable {
     this.percentage,
     {
       this.coinSymbol = "", this.thousandSeparator = "", this.decimalSeparator = "", this.isSelected = false,
+      this.isDefaultCoin = true, this.coinAcronym,
     }
   );
 
-  CategoryEntity.empty() : id = "", name = "", coinSymbol = "", thousandSeparator = "", decimalSeparator = "", icon = Icon(Icons.auto_graph_rounded), isRevenue = false, isEssentialExpense = false, valueLimit = 0, valueSpent = 0, percentage = 0, isSelected = false;
+  CategoryEntity.empty() : id = "", name = "", coinSymbol = "", thousandSeparator = "", decimalSeparator = "", icon = Icon(Icons.auto_graph_rounded), isRevenue = false, isEssentialExpense = false, valueLimit = 0, valueSpent = 0, percentage = 0, isSelected = false, isDefaultCoin = true, coinAcronym = "BRL";
 
-  CategoryEntity setIsSelected( bool value ) {
+  CategoryEntity copyWith({
+    double? valueLimit,
+    bool? isSelected,
+    bool? isDefaultCoin,
+    CoinEntity? coin,
+  }) {
     return CategoryEntity(
       id,
       name,
       icon,
       isRevenue,
       isEssentialExpense,
-      valueLimit,
+      valueLimit ?? this.valueLimit,
       valueSpent,
       percentage,
-      coinSymbol: coinSymbol,
-      thousandSeparator: thousandSeparator,
-      decimalSeparator: decimalSeparator,
-      isSelected: value
+      isSelected: isSelected ?? this.isSelected,
+      isDefaultCoin: isDefaultCoin ?? this.isDefaultCoin,
+      coinAcronym: coin?.acronym ?? coinAcronym,
+      coinSymbol: coin?.symbol ?? coinSymbol,
+      thousandSeparator: coin?.thousandSeparator ?? thousandSeparator,
+      decimalSeparator: coin?.decimalSeparator ?? decimalSeparator,
     );
   }
 
@@ -51,6 +63,29 @@ class CategoryEntity extends Equatable {
       "percentage": percentage,
       "is_essential_expense": isEssentialExpense,
       "is_revenue": isRevenue,
+      "created_at": DateTime.now().toIso8601String(),
+    };
+  }
+
+  Map<String, dynamic> updateJson() {
+
+    String coinSymbol = this.coinSymbol;
+    String thousandSeparator = this.thousandSeparator;
+    String decimalSeparator = this.decimalSeparator;
+    if ( coinSymbol.trim().isEmpty ) {
+      coinSymbol = Session.user.coinSymbol;
+      thousandSeparator = Session.user.thousandSeparator;
+      decimalSeparator = Session.user.decimalSeparator;
+    }
+
+    return {
+      "coin_symbol": coinSymbol,
+      "thousand_separator": thousandSeparator,
+      "decimal_separator": decimalSeparator,
+      "value_limit": valueLimit,
+      "value_spent": valueSpent,
+      "percentage": percentage,
+      "updated_at": DateTime.now().toIso8601String(),
     };
   }
 
@@ -71,6 +106,7 @@ class CategoryEntity extends Equatable {
     valueSpent,
     percentage,
     isSelected,
+    isDefaultCoin,
   ];
 
 }
