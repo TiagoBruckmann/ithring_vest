@@ -104,8 +104,7 @@ class CategoryDataSourceImpl implements CategoryDataSource {
         }
         date = "$year-${Session.utils.parseNumberLessThan10(month)}";
 
-      // } while ( qtdMonths < 60 );
-      } while ( qtdMonths < 1 );
+      } while ( qtdMonths < 60 );
 
       if ( Session.user.stepMissing.trim() == StepMissingEnum.categories.name ) {
         db.collection("users").doc(userId).update({
@@ -175,7 +174,6 @@ class CategoryDataSourceImpl implements CategoryDataSource {
 
           for ( int j = i; j < end; j++ ) {
             CategoryModel category = categories[j];
-            print("category => ${category.id}");
             final DocumentReference docRef = db.collection("categories").doc(date).collection(userId).doc(category.id);
             batch.update(docRef, category.updateJson());
           }
@@ -190,8 +188,7 @@ class CategoryDataSourceImpl implements CategoryDataSource {
         }
         date = "$year-${Session.utils.parseNumberLessThan10(month)}";
 
-        // } while ( qtdMonths < 60 );
-      } while ( qtdMonths < 1 );
+      } while ( qtdMonths < 60 );
 
       if ( Session.user.stepMissing.trim() == StepMissingEnum.categoriesSelected.name ) {
         db.collection("users").doc(userId).update({

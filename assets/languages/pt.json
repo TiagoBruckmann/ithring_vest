@@ -61,9 +61,16 @@
       "register_account": {
         "welcome": "Vamos criar sua primeira conta",
         "subtitle": "Essa será sua conta principal para organizar suas finanças.",
-        "account_name": "Nome da conta",
-        "type_account": "Tipo da conta",
-        "coin": "Moeda da conta"
+        "coin": "Moeda da conta",
+        "balance_account": "Saldo da conta",
+        "type_account": "Tipo da conta"
+      },
+      "register_card": {
+        "welcome": "Você possui cartão de crédito?",
+        "subtitle": "Adicione seu cartão para ter controle completo dos seus gastos.",
+        "skip_title": "Pular etapa",
+        "skip_subtitle": "Agora não quero adicionar",
+        "btn":  "Salvar cartão"
       }
     },
     "categories": {
@@ -91,12 +98,16 @@
       "user_register_failed": "Falha ao cadastrar usuário, tente novamente.",
       "categories_not_loaded": "Falha ao carregar categorias, tente novamente.",
       "default_type_accounts_not_loaded": "Falha ao carregar os tipos de conta, tente novamente.",
+      "accounts_not_loaded": "Falha ao carregar suas contas, tente novamente.",
       "categories": "Selecione pelo menos uma categoria essencial e uma receita"
     },
     "success": {
       "user_created": "usuário criado com sucesso! Siga as próximas etapas para usar o app.",
       "categories_created": "Categories principais criadas com sucesso! Siga as próximas etapas para usar o app.",
-      "categories_updated": "Categorias atualizadas com sucesso! Siga as próximas etapas para usar o app."
+      "categories_updated": "Categorias atualizadas com sucesso! Siga as próximas etapas para usar o app.",
+      "account_created": "Conta principal criada com sucesso! Siga as próximas etapas para usar o app.",
+      "card_skipped": "Parabéns, agora você pode utilizar o app normalmente.",
+      "card_created": "Cartão cadastrado com sucesso! Agora você pode utilizar o app normalmente."
     }
   },
   "fields": {
@@ -115,11 +126,26 @@
     },
     "value_limit_category": {
       "label": "Valor limite da categoria"
+    },
+    "account_name": {
+      "label": "Nome da conta",
+      "hint": "Nome do banco"
+    },
+    "balance_account": {
+      "label": "Saldo da conta"
+    },
+    "card_name": {
+      "label": "Nome do cartão",
+      "hint": "IthringVest"
+    },
+    "credit_card_limit": {
+      "label": "Limite do cartão"
     }
   },
   "validations": {
     "required": {
-      "field": "O campo {field} é obrigatório."
+      "field": "O campo {field} é obrigatório.",
+      "type_account": "Selecione um tipo de conta para a sua conta"
     },
     "invalid": {
       "user": "E-mail ou senha inválidos",
@@ -131,7 +157,10 @@
       "password": "A senha não corresponde ao exigido",
       "confirm_password": "Certifique-se que as senhas informadas são idênticas",
       "email_max_500_characters": "O e-mail excede o tamanho esperado!",
-      "value_limit_category": "O valor do limite da categoria deve ser maior que 0."
+      "value_limit_category": "O valor do limite da categoria deve ser maior que 0.",
+      "account_name": "Preencha um nome de conta válido",
+      "card_name": "preencha um nome de cartão válido",
+      "credit_card_limit": "O valor do limite do cartão deve ser maior que 0."
     }
   },
   "coins": {

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:ithring_vest/session.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,6 +29,22 @@ class SharedUtils {
 
   String removeAllCharacters( String value ) {
     return value.replaceAll(RegExp(r'[^a-zA-Z0-9]'), "");
+  }
+
+  Icon buildIconFromApi( int iconName, int iconColor, String iconFontFamily ) {
+    String? package;
+    if ( iconFontFamily.toLowerCase().contains("fontawesome") ) {
+      package = "font_awesome_flutter";
+    }
+
+    return Icon(
+      IconData(
+        iconName,
+        fontFamily: iconFontFamily,
+        fontPackage: package,
+      ),
+      color: Color(iconColor),
+    );
   }
 
   Future<void> openAppStore() async {

@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ithring_vest/core/domain/source/local/injection/injection.dart';
 import 'package:ithring_vest/design_system/widgets/verify_connection_widget.dart';
 import 'package:ithring_vest/modules/auth/app/register/cubit/register_cubit.dart';
-import 'package:ithring_vest/modules/auth/app/register/widgets/register_account_widget.dart';
-import 'package:ithring_vest/modules/auth/app/register/widgets/register_upd_selected_category_widget.dart';
-import 'package:ithring_vest/modules/auth/app/register/widgets/register_user_category_widget.dart';
-import 'package:ithring_vest/modules/auth/app/register/widgets/register_user_widget.dart';
+import 'package:ithring_vest/modules/auth/app/register/widgets/pages/register_account_widget.dart';
+import 'package:ithring_vest/modules/auth/app/register/widgets/pages/register_credit_card_widget.dart';
+import 'package:ithring_vest/modules/auth/app/register/widgets/pages/register_upd_selected_category_widget.dart';
+import 'package:ithring_vest/modules/auth/app/register/widgets/pages/register_user_category_widget.dart';
+import 'package:ithring_vest/modules/auth/app/register/widgets/pages/register_user_widget.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -31,6 +32,8 @@ class RegisterPage extends StatelessWidget {
             ? RegisterUpdSelectedCategoryWidget(cubit: cubit, state: state)
             : ( state is RegisterAccountsState )
             ? RegisterAccountWidget(cubit: cubit, state: state)
+            : ( state is RegisterCardState )
+            ? RegisterCreditCardWidget(cubit: cubit, state: state)
             : Container(),
 
           );

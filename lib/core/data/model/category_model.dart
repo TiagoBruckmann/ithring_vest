@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:ithring_vest/core/domain/entities/category_entity.dart';
 import 'package:ithring_vest/session.dart';
 
@@ -10,7 +9,7 @@ class CategoryModel extends CategoryEntity with EquatableMixin {
     return CategoryModel(
       json["id"],
       json["name"],
-      _buildIcon(json["icon"], json["icon_color"], json["icon_font_family"]),
+      Session.utils.buildIconFromApi(json["icon"], json["icon_color"], json["icon_font_family"]),
       json["is_revenue"],
       json["is_essential_expense"],
       json["value_limit"],
@@ -40,16 +39,6 @@ class CategoryModel extends CategoryEntity with EquatableMixin {
       coinSymbol: entity.coinSymbol,
       thousandSeparator: entity.thousandSeparator,
       decimalSeparator: entity.decimalSeparator,
-    );
-  }
-
-  static Icon _buildIcon( int iconName, int iconColor, String iconFontFamily ) {
-    return Icon(
-      IconData(
-        iconName,
-        fontFamily: iconFontFamily,
-      ),
-      color: Color(iconColor),
     );
   }
 

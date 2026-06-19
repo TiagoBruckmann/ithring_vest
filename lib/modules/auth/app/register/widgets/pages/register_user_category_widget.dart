@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:ithring_vest/core/domain/entities/category_entity.dart';
+import 'package:ithring_vest/design_system/widgets/default_button.dart';
 import 'package:ithring_vest/modules/auth/app/register/cubit/register_cubit.dart';
 import 'package:ithring_vest/modules/auth/app/register/widgets/register_header_widget.dart';
 
@@ -15,13 +16,12 @@ class RegisterUserCategoryWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     Widget buildSectionTitle( String labelKey ) {
-      final label = FlutterI18n.translate(context, labelKey);
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            label,
+            FlutterI18n.translate(context, labelKey),
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -159,31 +159,10 @@ class RegisterUserCategoryWidget extends StatelessWidget {
 
           buildCategoryGrid(state.getNonEssentialCategoriesList()),
 
-          const SizedBox(height: 24),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => cubit.validateCategoriesSelection(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.primaryColor,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: Text(
-                  FlutterI18n.translate(context, "shared.btn_continue"),
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.scaffoldBackgroundColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+          DefaultButton(
+            function: () => cubit.validateCategoriesSelection(),
+            text: "shared.btn_continue",
           ),
-
-          const SizedBox(height: 16),
 
         ],
       ),

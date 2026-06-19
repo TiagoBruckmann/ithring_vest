@@ -115,6 +115,22 @@ class FieldsValidationUtils {
     return null;
   }
 
+  String? validateNameAccount( String value ) {
+    value = value.trim();
+
+    if ( value.isEmpty ) {
+      return _translateErrorMessage("validations.required.field", params: {
+        "field": _translateErrorMessage("fields.account_name.label"),
+      });
+    }
+
+    if ( value.length < 3 ) {
+      return _translateErrorMessage("validations.invalid.account_name");
+    }
+
+    return null;
+  }
+
   String? validateValueLimitCategory( String value ) {
     value = value.trim();
 
@@ -127,6 +143,39 @@ class FieldsValidationUtils {
     final numberValue = Session.coinFormatter.coinToDouble(value);
     if ( numberValue <= 0 ) {
       return _translateErrorMessage("validations.invalid.value_limit_category");
+    }
+
+    return null;
+  }
+
+  String? validateCardName( String value ) {
+    value = value.trim();
+
+    if ( value.isEmpty ) {
+      return _translateErrorMessage("validations.required.field", params: {
+        "field": _translateErrorMessage("fields.card_name.label"),
+      });
+    }
+
+    if ( value.length < 3 ) {
+      return _translateErrorMessage("validations.invalid.card_name");
+    }
+
+    return null;
+  }
+
+  String? validateValueCreditCardLimit( String value ) {
+    value = value.trim();
+
+    if ( value.isEmpty ) {
+      return _translateErrorMessage("validations.required.field", params: {
+        "field": _translateErrorMessage("fields.credit_card_limit.label"),
+      });
+    }
+
+    final numberValue = Session.coinFormatter.coinToDouble(value);
+    if ( numberValue <= 0 ) {
+      return _translateErrorMessage("validations.invalid.credit_card_limit");
     }
 
     return null;

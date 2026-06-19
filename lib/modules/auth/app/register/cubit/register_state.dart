@@ -165,26 +165,76 @@ class RegisterCategoriesSelectedState extends RegisterState {
 }
 
 class RegisterAccountsState extends RegisterState {
+  final TextEditingController nameController;
+  final MoneyMaskedTextController amountController;
   final List<TypeAccountEntity> typeAccounts;
+  final CoinEntity defaultCoin;
   final List<CoinEntity> coins;
-  const RegisterAccountsState({
+  RegisterAccountsState({
+    TextEditingController? nameController,
+    MoneyMaskedTextController? amountController,
+    this.defaultCoin = const CoinEntity.defaultBrl(),
     this.typeAccounts = const [],
     this.coins = const [],
-  });
+  }) : nameController = nameController ?? TextEditingController(),
+    amountController = amountController ?? Session.fieldsFormatter.moneyController(0);
 
   CoinEntity getDefaultCoin() {
     return coins.firstWhere((coin) => coin.symbol == Session.user.coinSymbol);
   }
 
+  RegisterAccountsState copyWith({
+    List<TypeAccountEntity>? typeAccounts,
+    List<CoinEntity>? coins,
+    CoinEntity? defaultCoin,
+  }) {
+    return RegisterAccountsState(
+      nameController: nameController,
+      amountController: Session.fieldsFormatter.moneyController(
+        amountController.numberValue,
+        leftSymbol: defaultCoin?.symbol,
+        thousandSeparator: defaultCoin?.thousandSeparator,
+        decimalSeparator: defaultCoin?.decimalSeparator,
+      ),
+      coins: coins ?? this.coins,
+      defaultCoin: defaultCoin ?? this.defaultCoin,
+      typeAccounts: typeAccounts ?? this.typeAccounts,
+    );
+  }
+
+  void dispose() {
+    nameController.clear();
+    nameController.dispose();
+    amountController.clear();
+    amountController.dispose();
+    typeAccounts.clear();
+    coins.clear();
+  }
+
   @override
-  List<Object?> get props => [typeAccounts, coins];
+  List<Object?> get props => [nameController, amountController, typeAccounts, defaultCoin, coins];
 }
 
 class RegisterCardState extends RegisterState {
-  const RegisterCardState();
+  final TextEditingController nameController;
+  final MoneyMaskedTextController limitController;
+  final AccountEntity account;
+  RegisterCardState({
+    TextEditingController? nameController,
+    MoneyMaskedTextController? limitController,
+    this.account = const AccountEntity.empty(),
+  }) : nameController = nameController ?? TextEditingController(),
+    limitController = limitController ?? Session.fieldsFormatter.moneyController(0);
+
+  void dispose() {
+    nameController.clear();
+    nameController.dispose();
+    limitController.clear();
+    limitController.dispose();
+  }
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [nameController, limitController, account];
 }
 
 class RegisterLoadingState extends RegisterState {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
+import 'package:ithring_vest/design_system/widgets/default_button.dart';
 import 'package:ithring_vest/modules/auth/app/register/cubit/register_cubit.dart';
 import 'package:ithring_vest/modules/auth/app/register/widgets/register_header_widget.dart';
 import 'package:ithring_vest/session.dart';
@@ -250,23 +251,9 @@ class RegisterUserWidget extends StatelessWidget {
               state.passwordController.text,
             ),
 
-            const SizedBox(height: 32),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => cubit.validateCredentialsFields(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.primaryColor,
-                ),
-                child: Text(
-                  FlutterI18n.translate(context, "shared.btn_continue"),
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.scaffoldBackgroundColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            DefaultButton(
+              function: () => cubit.validateCredentialsFields(),
+              text: "shared.btn_continue",
             ),
 
           ],

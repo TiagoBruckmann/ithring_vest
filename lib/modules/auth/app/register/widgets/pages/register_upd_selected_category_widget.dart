@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
+import 'package:ithring_vest/design_system/widgets/default_button.dart';
 import 'package:ithring_vest/modules/auth/app/register/cubit/register_cubit.dart';
 import 'package:ithring_vest/modules/auth/app/register/widgets/register_header_widget.dart';
 import 'package:ithring_vest/session.dart';
@@ -192,31 +193,10 @@ class RegisterUpdSelectedCategoryWidget extends StatelessWidget {
                 ),
               ),
 
-            const SizedBox(height: 24),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => cubit.validateUpdSelectedCategories(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.primaryColor,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(
-                    FlutterI18n.translate(context, "shared.btn_continue"),
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.scaffoldBackgroundColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+            DefaultButton(
+              function: () => cubit.validateUpdSelectedCategories(),
+              text: "shared.btn_continue",
             ),
-
-            const SizedBox(height: 16),
 
           ],
         ),

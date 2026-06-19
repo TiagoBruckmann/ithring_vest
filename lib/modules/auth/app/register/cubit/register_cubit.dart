@@ -3,14 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:injectable/injectable.dart';
 import 'package:equatable/equatable.dart';
+import 'package:ithring_vest/core/domain/entities/account_entity.dart';
 import 'package:ithring_vest/core/domain/entities/category_entity.dart';
 import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
 import 'package:ithring_vest/core/domain/entities/type_account_entity.dart';
 import 'package:ithring_vest/core/domain/entities/user_entity.dart';
 import 'package:ithring_vest/core/domain/enums/step_missing_enum.dart';
+import 'package:ithring_vest/core/domain/usecases/account_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/auth_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/category_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/coin_use_case.dart';
+import 'package:ithring_vest/core/domain/usecases/type_account_use_case.dart';
 import 'package:ithring_vest/design_system/widgets/toast_widget.dart';
 import 'package:ithring_vest/session.dart';
 
@@ -18,11 +21,15 @@ part 'register_state.dart';
 
 @injectable
 class RegisterCubit extends Cubit<RegisterState> {
+  final TypeAccountUseCase _typeAccountUseCase;
   final CategoryUseCase _categoryUseCase;
+  final AccountUseCase _accountUseCase;
   final AuthUseCase _authUseCase;
   final CoinUseCase _coinUseCase;
   RegisterCubit(
+    this._typeAccountUseCase,
     this._categoryUseCase,
+    this._accountUseCase,
     this._authUseCase,
     this._coinUseCase,
   ) : super(RegisterCredentialState()) {
@@ -54,11 +61,10 @@ class RegisterCubit extends Cubit<RegisterState> {
       ]);
 
       return;
-      return emit(RegisterAccountsState());
     }
 
     if ( Session.user.stepMissing == StepMissingEnum.creditCard.name ) {
-      return emit(RegisterCardState());
+      return await _getAccount();
     }
 
     await _getCoins();
@@ -126,8 +132,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   Future<void> _getDefaultTypeAccounts() async {
-    /// TODO: TROCAR O USE CASE
-    final result = await _categoryUseCase.getDefaultTypeAccounts();
+    final result = await _typeAccountUseCase.getDefaultTypeAccount();
     result.fold(
       ( failure ) {
         showError("toast.error.default_type_accounts_not_loaded");
@@ -141,6 +146,23 @@ class RegisterCubit extends Cubit<RegisterState> {
             typeAccounts: typeAccounts,
             coins: coins,
           ),
+        );
+      }
+    );
+  }
+
+  Future<void> _getAccount() async {
+    final result = await _accountUseCase.getUserAccounts();
+    result.fold(
+      ( failure ) {
+        showError("toast.error.accounts_not_loaded");
+        return emit(
+          RegisterCredentialState(),
+        );
+      },
+      ( accounts ) {
+        return emit(
+          RegisterCardState(account: accounts.first),
         );
       }
     );
@@ -173,7 +195,19 @@ class RegisterCubit extends Cubit<RegisterState> {
         ),
       );
     }
+
+    if ( currentState is RegisterAccountsState ) {
+      return emit(
+        currentState.copyWith(
+          defaultCoin: coin,
+        ),
+      );
+    }
   }
+
+  /// ***********************
+  /// CRIAÇÃO DO USUÁRIO
+  /// ***********************
 
   void togglePwdVisibility() {
     final currentState = state;
@@ -197,17 +231,12 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  void validateCredentialsFields() {
+  Future<void> validateCredentialsFields() async {
     final currentState = state as RegisterCredentialState;
     if ( !currentState.formKey.currentState!.validate() ) {
       return showError("toast.error.invalid_fields_red_validations");
     }
 
-    _registerUser();
-  }
-
-  Future<void> _registerUser() async {
-    final currentState = state as RegisterCredentialState;
     emit(RegisterLoadingState());
 
     final user = UserEntity.register(
@@ -228,8 +257,11 @@ class RegisterCubit extends Cubit<RegisterState> {
         return await _getDefaultCategories();
       },
     );
-
   }
+
+  /// ***********************
+  /// SELEÇÃO DAS CATEGORIAS PRINCIPAIS
+  /// ***********************
 
   void toggleCategorySelection( CategoryEntity category ) {
     final currentState = state;
@@ -252,7 +284,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  void validateCategoriesSelection() {
+  Future<void> validateCategoriesSelection() async {
     final currentState = state as RegisterCategoriesState;
 
     final categories = List<CategoryEntity>.from(currentState.categories);
@@ -264,10 +296,6 @@ class RegisterCubit extends Cubit<RegisterState> {
       return showError("toast.error.categories");
     }
 
-    _registerUserCategories();
-  }
-
-  Future<void> _registerUserCategories() async {
     final registerCategoriesState = state as RegisterCategoriesState;
     emit(RegisterLoadingState());
 
@@ -292,8 +320,11 @@ class RegisterCubit extends Cubit<RegisterState> {
         return registerCategoriesState.dispose();
       },
     );
-
   }
+
+  /// ***********************
+  /// ATUALIZAÇÃO DO VALOR LIMITE DAS CATEGORIAS
+  /// ***********************
 
   void toggleDefaultCoinUpdSelectedCategory( CategoryEntity category ) {
     final currentState = state;
@@ -354,15 +385,42 @@ class RegisterCubit extends Cubit<RegisterState> {
     return controllers;
   }
 
-  void validateUpdSelectedCategories() {
+  /// ***********************
+  /// REGISTRO DA CONTA
+  /// ***********************
+
+  void toggleTypeAccountSelection( TypeAccountEntity typeAccount ) {
+    final currentState = state;
+    if ( currentState is RegisterAccountsState ) {
+
+      typeAccount = typeAccount.copyWith(isSelected: !typeAccount.isSelected);
+
+      final list = List<TypeAccountEntity>.from(currentState.typeAccounts);
+      final oldIndexSelectedItem = list.indexWhere((item) => item.isSelected);
+      if ( !oldIndexSelectedItem.isNegative ) {
+        final oldItem = list[oldIndexSelectedItem];
+        list[oldIndexSelectedItem] = oldItem.copyWith(isSelected: !oldItem.isSelected);
+      }
+
+      final typeAccountIndex = list.indexWhere((element) => element.id == typeAccount.id);
+      if ( !typeAccountIndex.isNegative ) {
+        list[typeAccountIndex] = typeAccount;
+      }
+
+      return emit(
+        currentState.copyWith(
+          typeAccounts: list,
+        ),
+      );
+
+    }
+  }
+
+  Future<void> validateUpdSelectedCategories() async {
     if ( !Session.formKey.currentState!.validate() ) {
       return showError("toast.error.invalid_fields_red_validations");
     }
 
-    _updSelectedCategories();
-  }
-
-  Future<void> _updSelectedCategories() async {
     final currentState = state as RegisterCategoriesSelectedState;
     emit(RegisterLoadingState());
 
@@ -390,10 +448,47 @@ class RegisterCubit extends Cubit<RegisterState> {
     );
   }
 
-  @override
-  Future<void> close() {
-    // TODO: implement close
-    return super.close();
+  Future<void> validateAndRegisterAccount() async {
+    final currentState = state as RegisterAccountsState;
+    if ( !Session.formKey.currentState!.validate() ) {
+      return showError("toast.error.invalid_fields_red_validations");
+    }
+    
+    final list = List<TypeAccountEntity>.of(currentState.typeAccounts);
+    list.retainWhere((item) => item.isSelected);
+    
+    if ( list.isEmpty ) {
+      return showError("validations.required.type_account");
+    }
+
+    emit(RegisterLoadingState());
+
+    final account = AccountEntity.createAccount(currentState.nameController.text, currentState.amountController.text, currentState.defaultCoin, list.first, isDefaultAccount: true);
+
+    final response = await _accountUseCase.createUserAccount(account);
+    response.fold(
+      (failure) {
+        showError(failure.message);
+        emit(
+          RegisterAccountsState(
+            nameController: currentState.nameController,
+            amountController: currentState.amountController,
+            typeAccounts: currentState.typeAccounts,
+            defaultCoin: currentState.defaultCoin,
+            coins: coins,
+          ),
+        );
+      },
+      (account) {
+        currentState.dispose();
+        showSuccess("toast.success.account_created");
+        return emit(
+          RegisterCardState(
+            account: account,
+          ),
+        );
+      },
+    );
   }
 
 }
