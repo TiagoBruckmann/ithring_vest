@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
 import 'package:ithring_vest/core/domain/enums/step_missing_enum.dart';
+import 'package:ithring_vest/session.dart';
 
 class UserEntity extends Equatable {
 
@@ -92,11 +93,20 @@ class UserEntity extends Equatable {
     return map;
   }
 
-  Map<String, dynamic> updIsRegisterFinishedJson() {
+  Map<String, dynamic> updStatusRegisterJson() {
+
+    String stepMissing = "";
+    if ( Session.user.stepMissing.trim() == StepMissingEnum.categories.name ) {
+      stepMissing = StepMissingEnum.categoriesSelected.name;
+    } else if ( Session.user.stepMissing.trim() == StepMissingEnum.categoriesSelected.name ) {
+      stepMissing = StepMissingEnum.accounts.name;
+    } else if ( Session.user.stepMissing.trim() == StepMissingEnum.accounts.name ) {
+      stepMissing = StepMissingEnum.creditCard.name;
+    }
+
     Map<String, dynamic> map = {
-      "id": id,
-      "step_missing" : "",
-      "is_register_finished" : true,
+      "step_missing" : stepMissing,
+      "is_register_finished" : stepMissing.trim().isEmpty,
       "updated_at": DateTime.now().toIso8601String(),
     };
 

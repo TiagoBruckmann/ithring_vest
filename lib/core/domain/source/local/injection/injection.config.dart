@@ -18,19 +18,25 @@ import 'package:ithring_vest/core/data/datasource/account_data_source.dart'
     as _i459;
 import 'package:ithring_vest/core/data/datasource/auth_data_source.dart'
     as _i975;
+import 'package:ithring_vest/core/data/datasource/card_data_source.dart'
+    as _i390;
 import 'package:ithring_vest/core/data/datasource/category_data_source.dart'
     as _i830;
 import 'package:ithring_vest/core/data/datasource/coin_data_source.dart'
     as _i363;
 import 'package:ithring_vest/core/data/datasource/type_account_data_source.dart'
     as _i53;
+import 'package:ithring_vest/core/data/datasource/user_data_source.dart'
+    as _i787;
 import 'package:ithring_vest/core/data/repositories/account_repo.dart' as _i268;
 import 'package:ithring_vest/core/data/repositories/auth_repo.dart' as _i471;
+import 'package:ithring_vest/core/data/repositories/card_repo.dart' as _i156;
 import 'package:ithring_vest/core/data/repositories/category_repo.dart'
     as _i476;
 import 'package:ithring_vest/core/data/repositories/coin_repo.dart' as _i812;
 import 'package:ithring_vest/core/data/repositories/type_account_repo.dart'
     as _i902;
+import 'package:ithring_vest/core/data/repositories/user_repo.dart' as _i787;
 import 'package:ithring_vest/core/domain/source/local/injection/module/external_module.dart'
     as _i399;
 import 'package:ithring_vest/core/domain/source/local/mobx/connection/connection_mobx.dart'
@@ -40,11 +46,13 @@ import 'package:ithring_vest/core/domain/source/local/mobx/user/user_mobx.dart'
 import 'package:ithring_vest/core/domain/usecases/account_use_case.dart'
     as _i69;
 import 'package:ithring_vest/core/domain/usecases/auth_use_case.dart' as _i618;
+import 'package:ithring_vest/core/domain/usecases/card_use_case.dart' as _i584;
 import 'package:ithring_vest/core/domain/usecases/category_use_case.dart'
     as _i999;
 import 'package:ithring_vest/core/domain/usecases/coin_use_case.dart' as _i912;
 import 'package:ithring_vest/core/domain/usecases/type_account_use_case.dart'
     as _i526;
+import 'package:ithring_vest/core/domain/usecases/user_use_case.dart' as _i25;
 import 'package:ithring_vest/modules/auth/app/login/cubit/login_cubit.dart'
     as _i1023;
 import 'package:ithring_vest/modules/auth/app/register/cubit/register_cubit.dart'
@@ -73,7 +81,15 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i974.FirebaseFirestore>(),
           gh<_i59.FirebaseAuth>(),
         ));
+    gh.factory<_i787.UserDataSource>(() => _i787.UserDataSourceImpl(
+          gh<_i974.FirebaseFirestore>(),
+          gh<_i59.FirebaseAuth>(),
+        ));
     gh.factory<_i975.AuthDataSource>(() => _i975.AuthDataSourceImpl(
+          gh<_i974.FirebaseFirestore>(),
+          gh<_i59.FirebaseAuth>(),
+        ));
+    gh.factory<_i390.CardDataSource>(() => _i390.CardDataSourceImpl(
           gh<_i974.FirebaseFirestore>(),
           gh<_i59.FirebaseAuth>(),
         ));
@@ -85,12 +101,16 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i53.TypeAccountDataSourceImpl(gh<_i974.FirebaseFirestore>()));
     gh.factory<_i268.AccountRepo>(
         () => _i268.AccountRepoImpl(gh<_i459.AccountDataSource>()));
+    gh.factory<_i787.UserRepo>(
+        () => _i787.UserRepoImpl(gh<_i787.UserDataSource>()));
     gh.factory<_i471.AuthRepo>(
         () => _i471.AuthRepoImpl(gh<_i975.AuthDataSource>()));
     gh.factory<_i363.CoinDataSource>(
         () => _i363.CoinDataSourceImpl(gh<_i974.FirebaseFirestore>()));
     gh.factory<_i902.TypeAccountRepo>(
         () => _i902.TypeAccountRepoImpl(gh<_i53.TypeAccountDataSource>()));
+    gh.factory<_i156.CardRepo>(
+        () => _i156.CardRepoImpl(gh<_i390.CardDataSource>()));
     gh.factory<_i812.CoinRepo>(
         () => _i812.CoinRepoImpl(gh<_i363.CoinDataSource>()));
     gh.factory<_i526.TypeAccountUseCase>(
@@ -99,6 +119,7 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i618.AuthUseCase(gh<_i471.AuthRepo>()));
     gh.factory<_i476.CategoryRepo>(
         () => _i476.CategoryRepoImpl(gh<_i830.CategoryDataSource>()));
+    gh.factory<_i25.UserUseCase>(() => _i25.UserUseCase(gh<_i787.UserRepo>()));
     gh.factory<_i999.CategoryUseCase>(
         () => _i999.CategoryUseCase(gh<_i476.CategoryRepo>()));
     gh.factory<_i1023.LoginCubit>(
@@ -109,10 +130,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i69.AccountUseCase(gh<_i268.AccountRepo>()));
     gh.factory<_i912.CoinUseCase>(
         () => _i912.CoinUseCase(gh<_i812.CoinRepo>()));
+    gh.factory<_i584.CardUseCase>(
+        () => _i584.CardUseCase(gh<_i156.CardRepo>()));
     gh.factory<_i706.RegisterCubit>(() => _i706.RegisterCubit(
           gh<_i526.TypeAccountUseCase>(),
           gh<_i999.CategoryUseCase>(),
           gh<_i69.AccountUseCase>(),
+          gh<_i584.CardUseCase>(),
+          gh<_i25.UserUseCase>(),
           gh<_i618.AuthUseCase>(),
           gh<_i912.CoinUseCase>(),
         ));

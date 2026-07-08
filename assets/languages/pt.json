@@ -140,6 +140,9 @@
     },
     "credit_card_limit": {
       "label": "Limite do cartão"
+    },
+    "linked_account": {
+      "label": "Conta vinculada"
     }
   },
   "validations": {

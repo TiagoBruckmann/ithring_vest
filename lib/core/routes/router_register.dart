@@ -6,6 +6,7 @@ import 'package:ithring_vest/design_system/style/app_images.dart';
 import 'package:ithring_vest/design_system/widgets/verify_connection_widget.dart';
 import 'package:ithring_vest/modules/auth/routes/auth_path.dart';
 import 'package:ithring_vest/modules/auth/routes/auth_route.dart';
+import 'package:ithring_vest/modules/dashboard/routes/dash_path.dart';
 import 'package:ithring_vest/modules/dashboard/routes/dash_route.dart';
 import 'package:ithring_vest/session.dart';
 
@@ -57,8 +58,7 @@ class RouterRegister {
                 ),
                 onPressed: () {
                   if ( Session.user.id.trim().isNotEmpty ) {
-                    // return Session.navigation.go(DashPath.dashboardPath.dash);
-                    return;
+                    return Session.navigation.go(DashPath().dashboard);
                   }
 
                   return Session.navigation.go(AuthPath.loginPath.login);

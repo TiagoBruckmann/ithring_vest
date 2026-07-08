@@ -191,10 +191,7 @@ class CategoryDataSourceImpl implements CategoryDataSource {
       } while ( qtdMonths < 60 );
 
       if ( Session.user.stepMissing.trim() == StepMissingEnum.categoriesSelected.name ) {
-        db.collection("users").doc(userId).update({
-          "step_missing": StepMissingEnum.accounts.name,
-          "updated_at": DateTime.now().toIso8601String(),
-        });
+        db.collection("users").doc(userId).update(Session.user.updStatusRegisterJson());
       }
 
     } on UnauthorizedException {
@@ -237,7 +234,7 @@ class CategoryDataSourceImpl implements CategoryDataSource {
   String _validateUser() {
     final user = auth.currentUser;
     if ( user == null ) {
-      const errorMessage = "User unauthorized to Get Categories";
+      const errorMessage = "User unauthorized to Categories";
       Session.crash.onError("CategoryDataSource _validateUser", error: errorMessage);
       throw UnauthorizedException(errorMessage);
     }
@@ -246,8 +243,8 @@ class CategoryDataSourceImpl implements CategoryDataSource {
   }
 
   int _getCategoryPriority( CategoryModel category ) {
-    if (category.isEssentialExpense) return 0; // 1º
-    if (!category.isRevenue) return 1; // 2º
+    if ( category.isEssentialExpense ) return 0; // 1º
+    if ( !category.isRevenue ) return 1; // 2º
     return 2; // 3º (is_revenue == true)
   }
 

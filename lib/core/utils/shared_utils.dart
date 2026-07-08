@@ -47,6 +47,16 @@ class SharedUtils {
     );
   }
 
+  double percentageMathOperation( double valueLimit, double spent ) {
+    double rest = valueLimit - spent;
+    double percentageEssential = double.parse((( rest / valueLimit - 1) * 100).toString().replaceAll("-", ""));
+    if ( percentageEssential.isNaN || percentageEssential.isInfinite ) {
+      percentageEssential = 0;
+    }
+
+    return percentageEssential;
+  }
+
   Future<void> openAppStore() async {
 
     Uri url = Uri.https("play.google.com", "store/apps/details", {

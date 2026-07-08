@@ -17,14 +17,38 @@ class RegisterHeaderWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
 
-        LinearProgressIndicator(
-          value: step / 5,
-          minHeight: 4,
-          backgroundColor:
-          theme.colorScheme.tertiary.withValues(alpha: 0.2),
-          valueColor: AlwaysStoppedAnimation<Color>(
-            theme.primaryColor,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+
+            for ( int i = 0; i < step; i++ ) ...[
+
+              CircleAvatar(
+                child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: Text(
+                    "${i+1}",
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.scaffoldBackgroundColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+
+              if ( i < step - 1 )
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric( horizontal: 5 ),
+                    child: Divider(
+                      color: theme.primaryColorDark,
+                    ),
+                  ),
+                ),
+
+            ],
+
+          ],
         ),
 
         const SizedBox(height: 32),

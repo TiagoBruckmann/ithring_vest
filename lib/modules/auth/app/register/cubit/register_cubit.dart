@@ -4,6 +4,7 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:injectable/injectable.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ithring_vest/core/domain/entities/account_entity.dart';
+import 'package:ithring_vest/core/domain/entities/card_entity.dart';
 import 'package:ithring_vest/core/domain/entities/category_entity.dart';
 import 'package:ithring_vest/core/domain/entities/coin_entity.dart';
 import 'package:ithring_vest/core/domain/entities/type_account_entity.dart';
@@ -11,10 +12,13 @@ import 'package:ithring_vest/core/domain/entities/user_entity.dart';
 import 'package:ithring_vest/core/domain/enums/step_missing_enum.dart';
 import 'package:ithring_vest/core/domain/usecases/account_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/auth_use_case.dart';
+import 'package:ithring_vest/core/domain/usecases/card_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/category_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/coin_use_case.dart';
 import 'package:ithring_vest/core/domain/usecases/type_account_use_case.dart';
+import 'package:ithring_vest/core/domain/usecases/user_use_case.dart';
 import 'package:ithring_vest/design_system/widgets/toast_widget.dart';
+import 'package:ithring_vest/modules/dashboard/routes/dash_path.dart';
 import 'package:ithring_vest/session.dart';
 
 part 'register_state.dart';
@@ -24,12 +28,16 @@ class RegisterCubit extends Cubit<RegisterState> {
   final TypeAccountUseCase _typeAccountUseCase;
   final CategoryUseCase _categoryUseCase;
   final AccountUseCase _accountUseCase;
+  final CardUseCase _cardUseCase;
+  final UserUseCase _userUseCase;
   final AuthUseCase _authUseCase;
   final CoinUseCase _coinUseCase;
   RegisterCubit(
     this._typeAccountUseCase,
     this._categoryUseCase,
     this._accountUseCase,
+    this._cardUseCase,
+    this._userUseCase,
     this._authUseCase,
     this._coinUseCase,
   ) : super(RegisterCredentialState()) {
@@ -491,4 +499,47 @@ class RegisterCubit extends Cubit<RegisterState> {
     );
   }
 
+  /// ***********************
+  /// CRIAÇÃO DO CARTÃO
+  /// ***********************
+
+  Future<void> skipCreditCard() async {
+    emit(RegisterLoadingState());
+
+    final response = await _userUseCase.updateUser(Session.user);
+    response.fold(
+      (failure) => _goToDashboard(),
+      (success) => _goToDashboard(),
+    );
+  }
+
+  Future<void> validateAndRegisterCard() async {
+    final currentState = state as RegisterCardState;
+    if ( !Session.formKey.currentState!.validate() ) {
+      return showError("toast.error.invalid_fields_red_validations");
+    }
+
+    emit(RegisterLoadingState());
+    
+    final card = CardEntity(
+      name: currentState.nameController.text,
+      accountId: currentState.account.id,
+      instatementAmount: "0",
+      valueLimit: currentState.limitController.text,
+      valueSpent: "0",
+      percentage: "0",
+      coinSymbol: Session.user.coinSymbol,
+      thousandSeparator: Session.user.thousandSeparator,
+      decimalSeparator: Session.user.decimalSeparator,
+    );
+
+    final response = await _cardUseCase.createCard(card);
+    response.fold(
+      (failure) => _goToDashboard(),
+      (success) => _goToDashboard(),
+    );
+    
+  }
+
+  void _goToDashboard() => Session.navigation.go(DashPath().dashboard);
 }

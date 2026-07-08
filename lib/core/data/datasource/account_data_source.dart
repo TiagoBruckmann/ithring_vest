@@ -73,10 +73,7 @@ class AccountDataSourceImpl implements AccountDataSource {
       await batch.commit();
 
       if ( Session.user.stepMissing.trim() == StepMissingEnum.accounts.name ) {
-        db.collection("users").doc(userId).update({
-          "step_missing": StepMissingEnum.creditCard.name,
-          "updated_at": DateTime.now().toIso8601String(),
-        });
+        db.collection("users").doc(userId).update(Session.user.updStatusRegisterJson());
       }
 
     } on UnauthorizedException {
@@ -113,7 +110,7 @@ class AccountDataSourceImpl implements AccountDataSource {
   String _validateUser() {
     final user = auth.currentUser;
     if ( user == null ) {
-      const errorMessage = "User unauthorized to Get Categories";
+      const errorMessage = "User unauthorized to Accounts";
       Session.crash.onError("AccountDataSource _validateUser", error: errorMessage);
       throw UnauthorizedException(errorMessage);
     }
