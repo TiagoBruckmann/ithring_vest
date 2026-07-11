@@ -10,6 +10,7 @@ class Themes {
   // Theme - DARK
   // .****************
   static final _colorSchemeDark = ColorScheme.dark(
+    brightness: Brightness.dark,
     primary: AppColorsDark.primaryGreen,
     secondary: AppColorsDark.primaryPurple,
     surface: AppColorsDark.cardsBackground,
@@ -18,8 +19,6 @@ class Themes {
     onSecondary: AppColorsDark.hoverGreen,
     onSurface: AppColorsDark.secondaryText,
     tertiary: AppColorsDark.tertiaryText,
-    // onError: AppColorsDark.primaryText,
-    brightness: Brightness.dark,
   );
 
   static final _textThemeDark = TextTheme(

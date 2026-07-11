@@ -1,6 +1,7 @@
 {
   "shared": {
     "btn_continue": "Continuar",
+    "btn_confirm": "Confirmar",
     "btn_cancel": "Cancelar"
   },
   "pages": {
@@ -78,6 +79,30 @@
       "essential_category": "Essencial ⧫",
       "non_essential_category": "Lazer ⧫",
       "revenue": "Receita ⧫"
+    },
+    "dashboard": {
+      "greetings": {
+        "morning": "Bom dia,\n{name}!",
+        "afternoon": "Boa tarde,\n{name}!",
+        "evening": "Boa noite,\n{name}!"
+      },
+      "total_patrimony": "PATRIMÔNIO TOTAL",
+      "main_account": "Conta principal"
+    },
+    "financial_score": {
+      "title": "SAÚDE FINANCEIRA",
+      "bad_score": {
+        "title": "Atenção ⚠",
+        "subtitle": "Seus gastos estão acima do recomendado. Vamos ajudá-lo a recuperar o equilíbrio financeiro."
+      },
+      "right_way": {
+        "title": "Você está evoluindo! \uD83D\uDE80",
+        "subtitle": "Sua organização financeira está melhorando. Pequenos ajustes podem aumentar sua reserva e acelerar seus objetivos."
+      },
+      "good": {
+        "title": "Muito bom! \uD83C\uDF89",
+        "subtitle": "Você está no caminho certo. Continue assim para alcançar seus objetivos."
+      }
     }
   },
   "modal": {

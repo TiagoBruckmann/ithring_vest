@@ -71,7 +71,7 @@ Widget showDefaultDialog({
         child: Text(
           FlutterI18n.translate(builder, textCancel ?? "shared.btn_cancel"),
           style: theme.textTheme.bodySmall!.copyWith(
-            color: cancelTextColor ?? theme.colorScheme.primary,
+            color: cancelTextColor ?? theme.colorScheme.error,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -91,9 +91,9 @@ Widget showDefaultDialog({
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         ),
         child: Text(
-          FlutterI18n.translate(builder, textConfirm ?? "btn_confirm"),
+          FlutterI18n.translate(builder, textConfirm ?? "shared.btn_confirm"),
           style: theme.textTheme.bodySmall!.copyWith(
-            color: cancelTextColor ?? theme.colorScheme.onInverseSurface,
+            color: cancelTextColor ?? theme.colorScheme.primary,
             fontWeight: FontWeight.bold,
           ),
         ),

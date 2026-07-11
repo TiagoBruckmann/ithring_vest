@@ -35,7 +35,7 @@ abstract class _UserMobx with Store {
         body: Text(
           FlutterI18n.translate(_context, "modal.exit_app.subtitle"),
           style: Theme.of(_context).textTheme.titleMedium,
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
         ),
         confirmFunction: () => SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
       ),
