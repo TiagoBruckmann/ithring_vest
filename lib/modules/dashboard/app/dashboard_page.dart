@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ithring_vest/core/domain/source/local/injection/injection.dart';
 import 'package:ithring_vest/core/domain/source/local/mobx/user/user_mobx.dart';
 import 'package:ithring_vest/design_system/widgets/financial_score_widget.dart';
@@ -87,7 +88,10 @@ class DashboardPage extends StatelessWidget {
             ),
           ),
 
-          FinancialScoreWidget(),
+          Padding(
+            padding: const EdgeInsets.symmetric( vertical: 8 ),
+            child: FinancialScoreWidget(),
+          ),
 
         ],
       ),

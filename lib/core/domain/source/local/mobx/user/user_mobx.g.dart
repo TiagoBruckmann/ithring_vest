@@ -24,6 +24,15 @@ mixin _$UserMobx on _UserMobx, Store {
     });
   }
 
+  late final _$_setFinancialHealthAsyncAction =
+      AsyncAction('_UserMobx._setFinancialHealth', context: context);
+
+  @override
+  Future<void> _setFinancialHealth() {
+    return _$_setFinancialHealthAsyncAction
+        .run(() => super._setFinancialHealth());
+  }
+
   late final _$exitAppAsyncAction =
       AsyncAction('_UserMobx.exitApp', context: context);
 
@@ -34,6 +43,17 @@ mixin _$UserMobx on _UserMobx, Store {
 
   late final _$_UserMobxActionController =
       ActionController(name: '_UserMobx', context: context);
+
+  @override
+  void _setUser(UserEntity newUser) {
+    final _$actionInfo =
+        _$_UserMobxActionController.startAction(name: '_UserMobx._setUser');
+    try {
+      return super._setUser(newUser);
+    } finally {
+      _$_UserMobxActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setUser(UserEntity newUser) {

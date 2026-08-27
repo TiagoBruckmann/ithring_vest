@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:ithring_vest/core/domain/entities/user_entity.dart';
+import 'package:ithring_vest/core/domain/source/local/injection/injection.dart';
+import 'package:ithring_vest/core/domain/source/local/mobx/accounts/account_mobx.dart';
+import 'package:ithring_vest/core/domain/source/local/mobx/categories/category_mobx.dart';
 import 'package:ithring_vest/design_system/widgets/dialog_widget.dart';
 import 'package:ithring_vest/session.dart';
 import 'package:mobx/mobx.dart';
@@ -20,11 +23,101 @@ abstract class _UserMobx with Store {
   UserEntity user = UserEntity.empty();
 
   @action
+  void _setUser( UserEntity newUser ) {
+    user = newUser;
+  }
+
+  @action
   void setUser( UserEntity newUser ) {
     // Session.notifications.login(newUser.id);
     Session.crash.userConnected(newUser.id);
     Session.user = newUser;
-    user = newUser;
+    _setFinancialHealth();
+  }
+
+  @action
+  Future<void> _setFinancialHealth() async {
+
+    final accountMobx = getIt<AccountMobx>();
+    final categoryMobx = getIt<CategoryMobx>();
+
+    await Future.wait([
+      accountMobx.getAccounts()
+    ]);
+
+    final List<Map<String, dynamic>> financialStatus = [
+      {
+        "name": "essential_limit_expense",
+        "percentage": categoryMobx.essentialLimitExpensePercentage,
+      },
+      {
+        "name": "non_essential_limit_expense",
+        "percentage": categoryMobx.nonEssentialLimitExpensePercentage,
+      },
+    /*
+      {
+        "name": "credit_card_expense",
+        "percentage": 70,
+      }
+      */
+    ];
+
+    final suggestedEmergencyReserve = categoryMobx.essentialExpenseAmount * user.settings.qtdMonthsEmergencyReserve;
+    double parsedEmergencyReserve = 0;
+    final hasEmergencyReserve = accountMobx.emergencyReserveAccount != null;
+    if ( hasEmergencyReserve ) {
+      parsedEmergencyReserve = Session.coinFormatter.coinToDouble(accountMobx.emergencyReserveAccount!.amount);
+
+      financialStatus.add({
+        "name": "emergency_reserve",
+        "percentage": Session.utils.percentageMathOperation(suggestedEmergencyReserve, parsedEmergencyReserve),
+      });
+
+    }
+
+    double sumPercentages = 0;
+    for ( final item in financialStatus ) {
+      sumPercentages += item["percentage"];
+    }
+
+    final averagePercentage = (sumPercentages / financialStatus.length).round();
+
+    String overallName = "good";
+    if ( averagePercentage > 80 ) {
+      overallName = "bad_score";
+    } else if ( averagePercentage > 50 ) {
+      overallName = "right_way";
+    }
+
+    String? detailedMessage;
+    if ( categoryMobx.essentialLimitExpensePercentage >= 100 ) {
+      detailedMessage = "over_essential_expenses";
+    } else if ( categoryMobx.nonEssentialLimitExpensePercentage >= 100 ) {
+      detailedMessage = "over_non_essential_expenses";
+    } else if ( hasEmergencyReserve ) {
+      detailedMessage = "no_emergency_reserve";
+    } else if ( hasEmergencyReserve && parsedEmergencyReserve < suggestedEmergencyReserve ) {
+      detailedMessage = "emergency_reserve_not_enough";
+    } else if ( categoryMobx.expenseAmount >= categoryMobx.revenueAmount ) {
+      detailedMessage = "expend_more_than_salary";
+    }/* else if ( isCreditCardHighExpense ) {
+      detailedMessage = "credit_card_high_expense";
+    }
+    */
+
+    UserFinancialHealth userFinancialHealth = UserFinancialHealth.empty();
+    userFinancialHealth = userFinancialHealth.copyWith(
+      name: overallName,
+      percentage: averagePercentage,
+      detailedMessage: detailedMessage,
+    );
+
+    _setUser(
+      user.copyWith(
+        financialHealth: userFinancialHealth,
+      ),
+    );
+
   }
 
   @action

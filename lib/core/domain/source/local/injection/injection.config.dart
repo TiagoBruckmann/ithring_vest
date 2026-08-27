@@ -39,6 +39,10 @@ import 'package:ithring_vest/core/data/repositories/type_account_repo.dart'
 import 'package:ithring_vest/core/data/repositories/user_repo.dart' as _i787;
 import 'package:ithring_vest/core/domain/source/local/injection/module/external_module.dart'
     as _i399;
+import 'package:ithring_vest/core/domain/source/local/mobx/accounts/account_mobx.dart'
+    as _i33;
+import 'package:ithring_vest/core/domain/source/local/mobx/categories/category_mobx.dart'
+    as _i992;
 import 'package:ithring_vest/core/domain/source/local/mobx/connection/connection_mobx.dart'
     as _i311;
 import 'package:ithring_vest/core/domain/source/local/mobx/user/user_mobx.dart'
@@ -76,6 +80,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i974.FirebaseFirestore>(() => externalModule.firestore);
     gh.lazySingleton<_i59.FirebaseAuth>(() => externalModule.firebaseAuth);
     gh.lazySingleton<_i519.Client>(() => externalModule.httpClient);
+    gh.lazySingleton<_i33.AccountMobx>(() => _i33.AccountMobx());
+    gh.lazySingleton<_i992.CategoryMobx>(() => _i992.CategoryMobx());
     gh.lazySingleton<_i477.UserMobx>(() => _i477.UserMobx());
     gh.factory<_i459.AccountDataSource>(() => _i459.AccountDataSourceImpl(
           gh<_i974.FirebaseFirestore>(),

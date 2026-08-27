@@ -19,6 +19,7 @@ class Themes {
     onSecondary: AppColorsDark.hoverGreen,
     onSurface: AppColorsDark.secondaryText,
     tertiary: AppColorsDark.tertiaryText,
+    onTertiary: AppColorsDark.warning,
   );
 
   static final _textThemeDark = TextTheme(
@@ -390,6 +391,7 @@ class Themes {
     onSurface: AppColorsLight.primaryText,
     onError: AppColorsLight.primaryText,
     brightness: Brightness.light,
+    onTertiary: AppColorsLight.warning,
   );
 
   static final _textThemeLight = TextTheme(

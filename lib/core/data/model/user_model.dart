@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:ithring_vest/core/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity with EquatableMixin {
-  UserModel({required super.id, required super.photoUrl, required super.name, required super.email, required super.coinSymbol, required super.thousandSeparator, required super.decimalSeparator, required super.stepMissing, required super.financialBalance, required super.oldBalance, required super.isRegisterFinished });
+  UserModel({required super.id, required super.photoUrl, required super.name, required super.email, required super.coinSymbol, required super.thousandSeparator, required super.decimalSeparator, required super.stepMissing, required super.financialBalance, required super.settings, required super.oldBalance, required super.isRegisterFinished });
 
   factory UserModel.fromJson( Map<String, dynamic> json ) {
     return UserModel(
@@ -15,6 +15,7 @@ class UserModel extends UserEntity with EquatableMixin {
       decimalSeparator: json["decimal_separator"],
       stepMissing: json["step_missing"],
       financialBalance: UserFinancialBalanceModel.fromJson(json["financial_balance"]),
+      settings: UserSettingsModel.fromJson(json["settings"]),
       oldBalance: json["old_balance"],
       isRegisterFinished: json["is_register_finished"],
     );
@@ -31,6 +32,7 @@ class UserModel extends UserEntity with EquatableMixin {
       decimalSeparator: user.decimalSeparator,
       stepMissing: user.stepMissing,
       financialBalance: UserFinancialBalanceModel.fromEntity(user.financialBalance),
+      settings: UserSettingsModel.fromEntity(user.settings),
       oldBalance: user.oldBalance,
       isRegisterFinished: user.isRegisterFinished,
     );
@@ -47,6 +49,7 @@ class UserModel extends UserEntity with EquatableMixin {
       decimalSeparator: decimalSeparator,
       stepMissing: stepMissing,
       financialBalance: financialBalance,
+      settings: settings,
       oldBalance: oldBalance,
       isRegisterFinished: isRegisterFinished,
     );
@@ -70,6 +73,23 @@ class UserFinancialBalanceModel extends UserFinancialBalanceEntity with Equatabl
       entity.essentialExpenses,
       entity.nonEssentialExpenses,
       entity.investments,
+    );
+  }
+
+}
+
+class UserSettingsModel extends UserSettingsEntity with EquatableMixin {
+  UserSettingsModel( super.qtdMonthsEmergencyReserve );
+
+  factory UserSettingsModel.fromJson( Map<String, dynamic> json ) {
+    return UserSettingsModel(
+      json["qtd_months_emergency_reserve"],
+    );
+  }
+
+  factory UserSettingsModel.fromEntity( UserSettingsEntity entity ) {
+    return UserSettingsModel(
+      entity.qtdMonthsEmergencyReserve,
     );
   }
 
