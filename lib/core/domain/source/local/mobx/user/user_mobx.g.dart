@@ -24,6 +24,22 @@ mixin _$UserMobx on _UserMobx, Store {
     });
   }
 
+  late final _$greetingAtom =
+      Atom(name: '_UserMobx.greeting', context: context);
+
+  @override
+  String get greeting {
+    _$greetingAtom.reportRead();
+    return super.greeting;
+  }
+
+  @override
+  set greeting(String value) {
+    _$greetingAtom.reportWrite(value, super.greeting, () {
+      super.greeting = value;
+    });
+  }
+
   late final _$_setFinancialHealthAsyncAction =
       AsyncAction('_UserMobx._setFinancialHealth', context: context);
 
@@ -56,6 +72,17 @@ mixin _$UserMobx on _UserMobx, Store {
   }
 
   @override
+  void _getGreeting() {
+    final _$actionInfo =
+        _$_UserMobxActionController.startAction(name: '_UserMobx._getGreeting');
+    try {
+      return super._getGreeting();
+    } finally {
+      _$_UserMobxActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setUser(UserEntity newUser) {
     final _$actionInfo =
         _$_UserMobxActionController.startAction(name: '_UserMobx.setUser');
@@ -69,7 +96,8 @@ mixin _$UserMobx on _UserMobx, Store {
   @override
   String toString() {
     return '''
-user: ${user}
+user: ${user},
+greeting: ${greeting}
     ''';
   }
 }

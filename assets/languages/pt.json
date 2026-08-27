@@ -2,7 +2,10 @@
   "shared": {
     "btn_continue": "Continuar",
     "btn_confirm": "Confirmar",
-    "btn_cancel": "Cancelar"
+    "btn_cancel": "Cancelar",
+    "revenues": "Receitas",
+    "expenses": "Despesas",
+    "investments": "Investimentos"
   },
   "pages": {
     "splash": {
@@ -87,7 +90,10 @@
         "evening": "Boa noite,\n{name}!"
       },
       "total_patrimony": "PATRIMÔNIO TOTAL",
-      "main_account": "Conta principal"
+      "main_account": "Conta principal",
+      "monthly_flow": "Fluxo Mensal",
+      "last_transactions": "Últimas transações",
+      "see_all": "Ver todas"
     },
     "financial_score": {
       "title": "SAÚDE FINANCEIRA",
@@ -98,7 +104,8 @@
         "no_emergency_reserve": "Você ainda não criou uma reserva de emergência. Uma conta saudavel requer uma reserva de emergência solida.",
         "emergency_reserve_not_enough": "Sua reserva de emergência suporta você por apenas {times} meses, o mínimo recomendadp é uma reserva para 6 meses.",
         "credit_card_high_expense": "O uso do seu cartão de crédito está elevado, tome cuidado para não gastar mais do que ganha.",
-        "expend_more_than_salary": "Você está gastando mais do que ganha! Vamos ajudá-lo a equilibrar suas finanças."
+        "expend_more_than_salary": "Você está gastando mais do que ganha! Vamos ajudá-lo a equilibrar suas finanças.",
+        "expend_more_than_salary_without_reserve": "Você está gastando mais do que ganha sem ter uma reserva de emergência! Sugerimos diminuir seus gastos e criar uma reserva para ajudá-lo a equilibrar suas finanças."
       },
       "bad_score": {
         "title": "Atenção ⚠",

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:graphic/graphic.dart';
 import 'package:ithring_vest/core/domain/source/local/injection/injection.dart';
 import 'package:ithring_vest/core/domain/source/local/mobx/user/user_mobx.dart';
+import 'package:ithring_vest/design_system/widgets/circular_progress_painter.dart';
 
 class FinancialScoreWidget extends StatelessWidget {
   final bool showSeeDetailsBtn;
@@ -12,10 +12,171 @@ class FinancialScoreWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final mediaQuerySize = MediaQuery.of(context).size;
     final userMobx = getIt<UserMobx>();
     final theme = Theme.of(context);
 
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.primaryColor,
+          width: 1,
+        ),
+      ),
+      child: Observer(
+        builder: (context) {
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      Text(
+                        FlutterI18n.translate(context, "pages.financial_score.title"),
+                        style: theme.textTheme.titleMedium!.apply(
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      Container(
+                        height: 1,
+                        width: 28,
+                        color: theme.colorScheme.onSurface,
+                      ),
+
+                    ],
+                  ),
+
+                  Icon(
+                    Icons.chevron_right,
+                    color: theme.colorScheme.onSurface,
+                    size: 22,
+                  ),
+
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+
+                  SizedBox(
+                    width: 110,
+                    height: 110,
+                    child: CustomPaint(
+                      painter: CircularProgressPainter(
+                        progress: userMobx.user.financialHealth.percentage / 100,
+                        primaryColor: ( userMobx.user.financialHealth.percentage > 80 )
+                        ? theme.colorScheme.error
+                        : ( userMobx.user.financialHealth.percentage > 50 )
+                        ? theme.colorScheme.onTertiary
+                        : theme.primaryColor,
+                        backgroundColor: theme.snackBarTheme.backgroundColor!,
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+
+                            Text(
+                              userMobx.user.financialHealth.percentage.toString(),
+                              style: theme.textTheme.headlineMedium,
+                            ),
+
+                            const SizedBox(height: 2),
+
+                            Text(
+                              "/100",
+                              style: theme.textTheme.titleMedium!.apply(
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 20),
+
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        Text(
+                          FlutterI18n.translate(context, "pages.financial_score.${userMobx.user.financialHealth.name}.title"),
+                          style: theme.textTheme.titleMedium!.apply(
+                            color: theme.primaryColor,
+                          ),
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        Text(
+                          ( userMobx.user.financialHealth.detailedMessage != null )
+                            ? FlutterI18n.translate(context, "pages.financial_score.detailed_message.${userMobx.user.financialHealth.detailedMessage}")
+                            : FlutterI18n.translate(context, "pages.financial_score.${userMobx.user.financialHealth.name}.subtitle"),
+                          style: theme.textTheme.titleSmall,
+                        ),
+
+                        Visibility(
+                          visible: showSeeDetailsBtn,
+                          child: Padding(
+                            padding: const EdgeInsets.only( top: 10 ),
+                            child: OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 6,
+                                ),
+                                side: BorderSide(
+                                  color: theme.primaryColor,
+                                  width: 0.5,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                FlutterI18n.translate(context, "pages.financial_score.btn_details"),
+                                style: theme.textTheme.titleSmall,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+
+        }
+      ),
+    );
+
+    /*
     return Card(
       elevation: 0,
       color: Colors.transparent,
@@ -42,92 +203,8 @@ class FinancialScoreWidget extends StatelessWidget {
 
               return ListTile(
                 titleAlignment: ListTileTitleAlignment.top,
-                leading: Stack(
-                  children: [
-
-                    /*
-                        Container(
-                          margin: const EdgeInsets.symmetric( vertical: 10 ),
-                          height: 225,
-                          child: Chart(
-                            data: userMobx.financialHealth,
-                            variables: {
-                              "health": Variable(
-                                accessor: ( Map item ) => item["name"] as String,
-                              ),
-                              "amount": Variable(
-                                accessor: ( Map item ) => item["amount"] as num,
-                              ),
-                            },
-                            transforms: [
-                              Proportion(
-                                variable: "amount",
-                                as: "percent",
-                              ),
-                            ],
-                            marks: [
-                              IntervalMark(
-                                position: Varset("percent") / Varset("health"),
-                                color: ColorEncode(
-                                  variable: "health",
-                                  values: [
-                                    theme.colorScheme.secondary,
-                                    theme.colorScheme.inversePrimary,
-                                    theme.colorScheme.error,
-                                    theme.colorScheme.onTertiary,
-                                  ],
-                                ),
-                                modifiers: [StackModifier()],
-                              ),
-                            ],
-                            coord: PolarCoord(
-                              transposed: true,
-                              dimCount: 1,
-                              startRadius: 0.8,
-                            ),
-                            selections: {
-                              "tap": PointSelection(
-                                on: {GestureType.tap},
-                                clear: {},
-                              ),
-                            },
-                          ),
-                        ),
-                        */
-
-                    CircularProgressIndicator(
-                      value: userMobx.user.financialHealth.percentage / 100,
-                      backgroundColor: ( userMobx.user.financialHealth.percentage > 80 )
-                          ? theme.colorScheme.error
-                          : ( userMobx.user.financialHealth.percentage > 50 )
-                          ? theme.colorScheme.onTertiary
-                          : theme.primaryColor,
-                      strokeWidth: 3,
-                    ),
-
-                    Positioned(
-                      width: mediaQuerySize.width / 1.2,
-                      top: mediaQuerySize.height / 7.4,
-                      child: Text.rich(
-                        TextSpan(
-                          text: "${userMobx.user.financialHealth.percentage}\n",
-                          children: [
-
-                            TextSpan(
-                              text: "/100",
-                              style: theme.textTheme.bodySmall,
-                            ),
-
-                          ],
-                        ),
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.titleMedium!.copyWith(
-                          height: 0,
-                        ),
-                      ),
-                    ),
-
-                  ],
+                leading: _CircularScoreIndicator(
+                  score: userMobx.user.financialHealth.percentage,
                 ),
                 title: Text(
                   FlutterI18n.translate(context, "pages.financial_score.${userMobx.user.financialHealth.name}.title"),
@@ -139,20 +216,11 @@ class FinancialScoreWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    Visibility(
-                      visible: userMobx.user.financialHealth.detailedMessage == null,
-                      child: Text(
-                        FlutterI18n.translate(context, "pages.financial_score.${userMobx.user.financialHealth.name}.subtitle"),
-                        style: theme.textTheme.titleSmall,
-                      ),
-                    ),
-
-                    Visibility(
-                      visible: userMobx.user.financialHealth.detailedMessage != null,
-                      child: Text(
-                        FlutterI18n.translate(context, "pages.financial_score.detailed_message.${userMobx.user.financialHealth.detailedMessage}"),
-                        style: theme.textTheme.titleSmall,
-                      ),
+                    Text(
+                      userMobx.user.financialHealth.detailedMessage != null
+                          ? FlutterI18n.translate(context, "pages.financial_score.detailed_message.${userMobx.user.financialHealth.detailedMessage}")
+                          : FlutterI18n.translate(context, "pages.financial_score.${userMobx.user.financialHealth.name}.subtitle"),
+                      style: theme.textTheme.titleSmall,
                     ),
 
                     Visibility(
@@ -163,8 +231,8 @@ class FinancialScoreWidget extends StatelessWidget {
                           onPressed: () {},
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: theme.primaryColor,
-                              width: 0.5
+                                color: theme.primaryColor,
+                                width: 0.5
                             ),
                           ),
                           child: Text(
@@ -188,5 +256,6 @@ class FinancialScoreWidget extends StatelessWidget {
         ],
       ),
     );
+    */
   }
 }

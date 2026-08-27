@@ -22,9 +22,24 @@ abstract class _UserMobx with Store {
   @observable
   UserEntity user = UserEntity.empty();
 
+  @observable
+  String greeting = "morning";
+
   @action
   void _setUser( UserEntity newUser ) {
     user = newUser;
+  }
+
+  @action
+  void _getGreeting() {
+    final hour = DateTime.now().hour;
+    if ( hour >= 5 && hour < 12 ) {
+      greeting = "morning";
+    } else if ( hour >= 12 && hour < 18 ) {
+      greeting = "afternoon";
+    } else {
+      greeting = "evening";
+    }
   }
 
   @action
@@ -32,6 +47,7 @@ abstract class _UserMobx with Store {
     // Session.notifications.login(newUser.id);
     Session.crash.userConnected(newUser.id);
     Session.user = newUser;
+    _getGreeting();
     _setFinancialHealth();
   }
 
@@ -94,12 +110,14 @@ abstract class _UserMobx with Store {
       detailedMessage = "over_essential_expenses";
     } else if ( categoryMobx.nonEssentialLimitExpensePercentage >= 100 ) {
       detailedMessage = "over_non_essential_expenses";
-    } else if ( hasEmergencyReserve ) {
+    } else if ( !hasEmergencyReserve ) {
       detailedMessage = "no_emergency_reserve";
     } else if ( hasEmergencyReserve && parsedEmergencyReserve < suggestedEmergencyReserve ) {
       detailedMessage = "emergency_reserve_not_enough";
-    } else if ( categoryMobx.expenseAmount >= categoryMobx.revenueAmount ) {
+    } else if ( categoryMobx.expenseAmount > 0 && categoryMobx.expenseAmount >= categoryMobx.revenueAmount ) {
       detailedMessage = "expend_more_than_salary";
+    } else if ( categoryMobx.expenseAmount > 0 && categoryMobx.expenseAmount >= categoryMobx.revenueAmount && !hasEmergencyReserve ) {
+      detailedMessage = "expend_more_than_salary_without_reserve";
     }/* else if ( isCreditCardHighExpense ) {
       detailedMessage = "credit_card_high_expense";
     }

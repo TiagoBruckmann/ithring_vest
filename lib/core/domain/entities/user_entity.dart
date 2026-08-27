@@ -25,7 +25,7 @@ class UserEntity extends Equatable {
     required this.settings,
     required this.oldBalance,
     required this.isRegisterFinished,
-    this.financialHealth = const UserFinancialHealth("", 0 ),
+    this.financialHealth = const UserFinancialHealth("", 0),
   });
 
   factory UserEntity.empty() {

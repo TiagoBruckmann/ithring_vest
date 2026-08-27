@@ -4,6 +4,7 @@ import 'package:ithring_vest/core/domain/source/local/injection/injection.dart';
 import 'package:ithring_vest/core/domain/source/local/mobx/categories/category_mobx.dart';
 import 'package:ithring_vest/core/domain/usecases/account_use_case.dart';
 import 'package:ithring_vest/design_system/widgets/toast_widget.dart';
+import 'package:ithring_vest/session.dart';
 import 'package:mobx/mobx.dart';
 
 part 'account_mobx.g.dart';
@@ -16,6 +17,12 @@ abstract class _AccountMobx with Store {
   final _accountUseCase = AccountUseCase(getIt());
 
   ObservableList<AccountEntity> accountList = ObservableList();
+
+  @observable
+  double totalPatrimonyAmount = 0;
+
+  @observable
+  String defaultAccountAmount = Session.coinFormatter.doubleToCoin(0);
 
   @observable
   AccountEntity? emergencyReserveAccount;
@@ -35,6 +42,14 @@ abstract class _AccountMobx with Store {
 
         if ( emergencyReserve.id.trim().isNotEmpty ) {
           emergencyReserveAccount = emergencyReserve;
+        }
+
+        for (  final account in accountList ) {
+          totalPatrimonyAmount += Session.coinFormatter.coinToDouble(account.amount);
+
+          if ( account.isDefault ) {
+            defaultAccountAmount = account.amount;
+          }
         }
 
       },
