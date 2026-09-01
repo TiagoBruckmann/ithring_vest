@@ -47,6 +47,7 @@ abstract class _UserMobx with Store {
     // Session.notifications.login(newUser.id);
     Session.crash.userConnected(newUser.id);
     Session.user = newUser;
+    _setUser(newUser);
     _getGreeting();
     _setFinancialHealth();
   }

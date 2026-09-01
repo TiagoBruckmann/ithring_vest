@@ -9,6 +9,7 @@ import 'package:ithring_vest/session.dart';
 
 class VerifyConnectionWidget extends StatelessWidget {
   final String keyAppBar;
+  final String? secondaryKeyAppBar;
   final Map<String, String>? appBarParams;
   final List<Widget>? actionWidgets;
   final double bodyPadding;
@@ -20,7 +21,7 @@ class VerifyConnectionWidget extends StatelessWidget {
   final bool isLoading;
   final String loadingMessage;
   final Widget? bottomNavigationBar;
-  const VerifyConnectionWidget({ super.key, this.keyAppBar = "", this.appBarParams, this.actionWidgets, this.bodyPadding = 16, this.titleColor, required this.child, this.drawer, this.canPop = true, this.popFunction, this.isLoading = false, this.loadingMessage = "", this.bottomNavigationBar });
+  const VerifyConnectionWidget({ super.key, this.keyAppBar = "", this.secondaryKeyAppBar, this.appBarParams, this.actionWidgets, this.bodyPadding = 16, this.titleColor, required this.child, this.drawer, this.canPop = true, this.popFunction, this.isLoading = false, this.loadingMessage = "", this.bottomNavigationBar });
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +55,29 @@ class VerifyConnectionWidget extends StatelessWidget {
               message: loadingMessage,
               child: Scaffold(
                 appBar: AppBar(
-                  title: Text(
-                    FlutterI18n.translate(context, keyAppBar, translationParams: appBarParams),
-                    style: theme.appBarTheme.titleTextStyle!.copyWith(
+                  title: Text.rich(
+                    style: ( secondaryKeyAppBar != null )
+                    ? theme.textTheme.bodyMedium!.copyWith(
+                      fontSize: 15,
+                    )
+                    : theme.appBarTheme.titleTextStyle!.copyWith(
                       color: titleColor,
+                    ),
+                    TextSpan(
+                      text: FlutterI18n.translate(context, keyAppBar, translationParams: ( secondaryKeyAppBar != null ) ? null : appBarParams),
+                      children: [
+
+                        TextSpan(
+                          text: ( secondaryKeyAppBar != null )
+                            ? secondaryKeyAppBar
+                            : "",
+                          style: theme.appBarTheme.titleTextStyle!.copyWith(
+                            overflow: TextOverflow.ellipsis,
+                            color: titleColor,
+                          ),
+                        ),
+
+                      ]
                     ),
                   ),
                   actions: actionWidgets ?? [],

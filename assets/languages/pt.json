@@ -5,7 +5,14 @@
     "btn_cancel": "Cancelar",
     "revenues": "Receitas",
     "expenses": "Despesas",
-    "investments": "Investimentos"
+    "investments": "Investimentos",
+    "bottom_bar": {
+      "home": "Início",
+      "analysis": "Análise",
+      "release": "Lançamento",
+      "wallet": "Carteira",
+      "categories": "Categorias"
+    }
   },
   "pages": {
     "splash": {
@@ -85,9 +92,9 @@
     },
     "dashboard": {
       "greetings": {
-        "morning": "Bom dia,\n{name}!",
-        "afternoon": "Boa tarde,\n{name}!",
-        "evening": "Boa noite,\n{name}!"
+        "morning": "Bom dia,\n",
+        "afternoon": "Boa tarde,\n",
+        "evening": "Boa noite,\n"
       },
       "total_patrimony": "PATRIMÔNIO TOTAL",
       "main_account": "Conta principal",

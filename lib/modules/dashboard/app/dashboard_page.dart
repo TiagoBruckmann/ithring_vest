@@ -6,6 +6,7 @@ import 'package:ithring_vest/core/domain/source/local/injection/injection.dart';
 import 'package:ithring_vest/core/domain/source/local/mobx/accounts/account_mobx.dart';
 import 'package:ithring_vest/core/domain/source/local/mobx/categories/category_mobx.dart';
 import 'package:ithring_vest/core/domain/source/local/mobx/user/user_mobx.dart';
+import 'package:ithring_vest/design_system/widgets/bottom_navigation_bar_widget.dart';
 import 'package:ithring_vest/design_system/widgets/financial_score_widget.dart';
 import 'package:ithring_vest/design_system/widgets/verify_connection_widget.dart';
 import 'package:ithring_vest/modules/dashboard/app/widgets/monthly_flow_card_widget.dart';
@@ -29,7 +30,8 @@ class DashboardPage extends StatelessWidget {
           popFunction: () => userMobx.exitApp(),
           canPop: false,
           keyAppBar: "pages.dashboard.greetings.${userMobx.greeting}",
-          appBarParams: {"name": userMobx.user.name},
+          secondaryKeyAppBar: "${userMobx.user.name}!",
+          bottomNavigationBar: BottomNavigationBarWidget(),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
